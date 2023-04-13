@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                     getCurrentFocus().clearFocus();
                 } catch (Exception e) {
-                    // TODO: handle exception
+                    // handle exception
                 }
             }
         });
