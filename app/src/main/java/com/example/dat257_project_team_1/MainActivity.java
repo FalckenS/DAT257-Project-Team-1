@@ -44,33 +44,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateCurrentLocation() {
-
-        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, LOCATION_UPDATE_INTERVAL_MILLIS)
-                .setWaitForAccurateLocation(false)
-                .setMinUpdateIntervalMillis(MIN_LOCATION_UPDATE_MILLIS)
-                .setMaxUpdateDelayMillis(MAX_LOCATION_UPDATE_MILLIS)
-                .build();
-
-        // Another check for location permission, needed to use requestLocationUpdates. Ignore.
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        fusedLocationClient.requestLocationUpdates(locationRequest,
-                new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        if (locationResult == null) {
-                            return;
-                        }
-                        currentLocation = locationResult.getLastLocation();
-                        // TODO update UI with new results
-                    }
-                },
-                Looper.getMainLooper());
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
