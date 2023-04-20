@@ -18,6 +18,7 @@ import com.google.android.libraries.places.api.model.*;
 import com.google.android.libraries.places.api.net.*;
 import com.google.android.libraries.places.api.Places;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -111,6 +112,24 @@ public class MainActivity extends AppCompatActivity {
         // https://developers.google.com/maps/documentation/places/web-service/search-nearby
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = RequestBody.create("", mediaType);
+        String placesAPIUrl = constructPlacesAPIUrl();
+
+        Request request = new Request.Builder()
+                .url(placesAPIUrl)
+                .method("get", body)
+                .build();
+
+        Response response;
+        try {
+            response = okHttpClient.newCall(request).execute();
+        }
+        catch (Exception e) {
+
+        }
+    }
+
+    @NotNull
+    private static String constructPlacesAPIUrl() {
         String coordinatesSouth = "";
         String coordinatesEast = "";
         String location = coordinatesSouth + "%2C" + coordinatesEast;
@@ -123,18 +142,6 @@ public class MainActivity extends AppCompatActivity {
                 "&opennow=" + opennow +
                 "&rankby=" + rankby +
                 "&key=" + API_KEY;
-
-
-        Request request = new Request.Builder()
-                .url(placesAPIUrl)
-                .method("GET", body)
-                .build();
-        Response response;
-        try {
-            response = okHttpClient.newCall(request).execute();
-        }
-        catch (Exception e) {
-
-        }
+        return placesAPIUrl;
     }
 }
