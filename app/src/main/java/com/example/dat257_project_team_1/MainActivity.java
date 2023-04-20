@@ -1,5 +1,6 @@
 package com.example.dat257_project_team_1;
 
+import org.jetbrains.annotations.NotNull;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -50,16 +51,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_LOCATION_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted
-                locationPermissionGranted = true;
-            } else {
-                // Permission denied
-                locationPermissionGranted = false;
-            }
+            locationPermissionGranted = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
         }
     }
 
@@ -78,10 +73,7 @@ public class MainActivity extends AppCompatActivity {
         fusedLocationClient.requestLocationUpdates(locationRequest,
                 new LocationCallback() {
                     @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        if (locationResult == null) {
-                            return;
-                        }
+                    public void onLocationResult(@NotNull LocationResult locationResult) {
                         Location lastLocation = locationResult.getLastLocation();
                         if (lastLocation != null) {
                             currentLocation = lastLocation;
