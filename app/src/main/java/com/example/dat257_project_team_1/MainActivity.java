@@ -1,5 +1,6 @@
 package com.example.dat257_project_team_1;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import org.jetbrains.annotations.NotNull;
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -32,9 +33,11 @@ public class MainActivity extends AppCompatActivity {
         requestLocationPermission();
         if (locationPermissionGranted) {
             currentLocationInit();
+            while (currentLocation == null) {
+                // Wait for location
+            }
+            placesAPIHandler.updateRecyclingCenters(currentLocation);
         }
-
-        placesAPIHandler.updateRecyclingCenters(currentLocation);
     }
 
     private void requestLocationPermission() {
@@ -59,27 +62,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void currentLocationInit() {
-        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, LOCATION_UPDATE_INTERVAL_MILLIS)
-                .setWaitForAccurateLocation(false)
-                .setMinUpdateIntervalMillis(MIN_LOCATION_UPDATE_MILLIS)
-                .setMaxUpdateDelayMillis(MAX_LOCATION_UPDATE_MILLIS)
-                .build();
-
-        // Another check for location permission, needed to use requestLocationUpdates. Ignore.
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
-        fusedLocationClient.requestLocationUpdates(locationRequest,
-                new LocationCallback() {
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
-                    public void onLocationResult(@NotNull LocationResult locationResult) {
-                        Location lastLocation = locationResult.getLastLocation();
-                        if (lastLocation != null) {
-                            currentLocation = lastLocation;
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            currentLocation = location;
                         }
                     }
-                },
-                Looper.getMainLooper());
+                });
+
+//        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, LOCATION_UPDATE_INTERVAL_MILLIS)
+//                .setWaitForAccurateLocation(false)
+//                .setMinUpdateIntervalMillis(MIN_LOCATION_UPDATE_MILLIS)
+//                .setMaxUpdateDelayMillis(MAX_LOCATION_UPDATE_MILLIS)
+//                .build();
+//
+//        // Another check for location permission, needed to use requestLocationUpdates. Ignore.
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//
+//        fusedLocationClient.requestLocationUpdates(locationRequest,
+//                new LocationCallback() {
+//                    @Override
+//                    public void onLocationResult(@NotNull LocationResult locationResult) {
+//                        Location lastLocation = locationResult.getLastLocation();
+//                        if (lastLocation != null) {
+//                            currentLocation = lastLocation;
+//                        }
+//                    }
+//                },
+//                Looper.getMainLooper());
     }
 }
