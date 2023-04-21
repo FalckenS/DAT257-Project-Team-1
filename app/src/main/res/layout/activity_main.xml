@@ -29,9 +29,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/search_text"
-                android:paddingTop="25dp"
+                android:paddingTop="22dp"
                 android:paddingBottom="5dp"
                 android:imeOptions="actionDone"
-                android:singleLine="true" android:id="@+id/searchBar"/>
+                android:singleLine="true" android:id="@+id/searchBar" android:textSize="20sp"/>
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
