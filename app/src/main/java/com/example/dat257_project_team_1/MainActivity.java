@@ -65,16 +65,29 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            currentLocation = location;
-                        }
-                    }
-                });
+
+        // Define a location request with desired properties
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(10000); // Interval in milliseconds for location updates
+        locationRequest.setFastestInterval(5000); // The fastest interval for location updates
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); // Set the priority for the request
+
+        // Define a location callback to handle the updated location
+        LocationCallback locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                // Handle the updated location result here
+                Location location = locationResult.getLastLocation();
+                if (location != null) {
+                    // Do something with the location object
+                }
+            }
+        };
+
+// Request location updates using the fusedLocationClient
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+
 
 //        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, LOCATION_UPDATE_INTERVAL_MILLIS)
 //                .setWaitForAccurateLocation(false)
