@@ -1,6 +1,7 @@
 package com.example.dat257_project_team_1;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import android.location.Location;
 import okhttp3.*;
@@ -29,7 +30,7 @@ public class PlacesAPIHandler {
         String placesAPIUrl = constructPlacesAPIUrl(currentLocation);
         Request request = new Request.Builder()
                 .url(placesAPIUrl)
-                .method("get", body)
+                .method("GET", null)
                 .build();
 
         try {
@@ -67,9 +68,9 @@ public class PlacesAPIHandler {
         }).start();
     }
 
-    private void updateResults(Response response) {
+    private void updateResults(Response response) throws IOException {
         recyclingCenters.clear();
-        System.out.println(response.toString());
+        // System.out.println(response.body().string()); FUNKAR!
 
         // TODO add results to recyclingCenters
     }
