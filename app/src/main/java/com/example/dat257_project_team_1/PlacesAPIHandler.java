@@ -68,6 +68,7 @@ public class PlacesAPIHandler {
 
     private void updateResults(Response response) {
         recyclingCenters.clear();
+        System.out.println(response.toString());
 
         // TODO add results to recyclingCenters
     }

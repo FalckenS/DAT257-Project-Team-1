@@ -31,6 +31,13 @@ public class MainActivity extends AppCompatActivity {
         placesAPIHandler = new PlacesAPIHandler();
 
         requestLocationPermission();
+
+        // TEMP
+        locationPermissionGranted = false;
+        currentLocation.setLatitude(57.35494277871453);
+        currentLocation.setLongitude(12.126514588022303);
+        placesAPIHandler.updateRecyclingCenters(currentLocation);
+
         if (locationPermissionGranted) {
             currentLocationInit();
             while (currentLocation == null) {
@@ -62,33 +69,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void currentLocationInit() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        // Define a location request with desired properties
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(10000); // Interval in milliseconds for location updates
-        locationRequest.setFastestInterval(5000); // The fastest interval for location updates
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); // Set the priority for the request
-
-        // Define a location callback to handle the updated location
-        LocationCallback locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                // Handle the updated location result here
-                Location location = locationResult.getLastLocation();
-                if (location != null) {
-                    // Do something with the location object
-                }
-            }
-        };
-
-// Request location updates using the fusedLocationClient
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-
-
 //        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, LOCATION_UPDATE_INTERVAL_MILLIS)
 //                .setWaitForAccurateLocation(false)
 //                .setMinUpdateIntervalMillis(MIN_LOCATION_UPDATE_MILLIS)
