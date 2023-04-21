@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         // TEMP
         locationPermissionGranted = false;
+        currentLocation = new Location("DEBUG PROVIDER");
         currentLocation.setLatitude(57.35494277871453);
         currentLocation.setLongitude(12.126514588022303);
         placesAPIHandler.updateRecyclingCenters(currentLocation);
