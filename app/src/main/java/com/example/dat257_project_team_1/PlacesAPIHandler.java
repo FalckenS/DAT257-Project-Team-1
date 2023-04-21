@@ -70,8 +70,8 @@ public class PlacesAPIHandler {
 
     private void updateResults(Response response) throws IOException {
         recyclingCenters.clear();
-        // System.out.println(response.body().string()); FUNKAR!
-
+        System.out.println(response.body().string()); //FUNKAR!
+        System.out.println("Test");
         // TODO add results to recyclingCenters
     }
 }
