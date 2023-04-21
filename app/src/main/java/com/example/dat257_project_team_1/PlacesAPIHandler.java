@@ -15,6 +15,7 @@ public class PlacesAPIHandler {
 
     public PlacesAPIHandler() {
         okHttpClient = new OkHttpClient().newBuilder().build();
+        recyclingCenters = new ArrayList<>();
     }
 
     public ArrayList<RecyclingCenter> getRecyclingCenters() {
