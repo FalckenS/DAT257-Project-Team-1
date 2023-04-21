@@ -32,9 +32,11 @@ public class MainActivity extends AppCompatActivity {
         requestLocationPermission();
         if (locationPermissionGranted) {
             currentLocationInit();
+            while (currentLocation == null) {
+                // Wait for location
+            }
+            placesAPIHandler.updateRecyclingCenters(currentLocation);
         }
-
-        placesAPIHandler.updateRecyclingCenters(currentLocation);
     }
 
     private void requestLocationPermission() {
