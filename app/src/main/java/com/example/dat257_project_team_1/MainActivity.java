@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.google.android.gms.location.*;
+import android.content.Intent;
+import android.view.View;
+import android.widget.ImageView;
 
 import static com.example.dat257_project_team_1.Constants.*;
 
@@ -25,6 +28,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ImageView maps = (ImageView) findViewById(R.id.maps);
+        ImageView sideMenu = (ImageView) findViewById(R.id.sideMenu);
+        maps.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // your code here
+                openMap();
+            }
+        });
+
+        sideMenu.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // your code here
+                //should be somthing like sideMinu.bringToFront();
+                openSideMenu();
+            }
+        });
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         placesAPIHandler = new PlacesAPIHandler();
@@ -81,5 +101,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 },
                 Looper.getMainLooper());
+    }
+
+    private void openMap(){
+        //TODO
+        //code to open map view goes here.
+    }
+    private void openSideMenu(){
+        Intent intent = new Intent(this, SideMenu.class);
+        startActivity(intent);
     }
 }
