@@ -1,11 +1,11 @@
 package com.example.dat257_project_team_1;
 
 import org.jetbrains.annotations.NotNull;
+import android.os.Looper;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -50,11 +50,19 @@ public class MainActivity extends AppCompatActivity {
         placesAPIHandler = new PlacesAPIHandler();
 
         requestLocationPermission();
+
+        // TEMP
+        locationPermissionGranted = false;
+        currentLocation = LocationFactory.createLocation(57.35494277871453, 12.126514588022303);
+        placesAPIHandler.updateRecyclingCenters(currentLocation);
+
         if (locationPermissionGranted) {
             currentLocationInit();
+            while (currentLocation == null) {
+                // Wait for location
+            }
+            placesAPIHandler.updateRecyclingCenters(currentLocation);
         }
-
-        placesAPIHandler.updateRecyclingCenters(currentLocation);
     }
 
     private void requestLocationPermission() {
