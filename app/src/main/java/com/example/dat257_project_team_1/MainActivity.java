@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     private void openMap(){
         //TODO/DONE
         //code to open map view goes here.
-        Intent intent = new Intent(this, MapView.class);
+        Intent intent = new Intent(this, MapViewAct.class);
         startActivity(intent);
     }
     private void openSideMenu(){
