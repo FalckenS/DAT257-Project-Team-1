@@ -26,5 +26,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+    <androidx.cardview.widget.CardView
+            android:layout_width="409dp"
+            android:layout_height="wrap_content" tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="137dp" android:id="@+id/card1"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

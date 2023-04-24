@@ -1,5 +1,11 @@
 package com.example.dat257_project_team_1;
 
+import android.transition.AutoTransition;
+import android.transition.TransitionManager;
+import android.view.LayoutInflater;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import androidx.cardview.widget.CardView;
 import org.jetbrains.annotations.NotNull;
 import android.os.Looper;
 import android.Manifest;
@@ -14,7 +20,10 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 import static com.example.dat257_project_team_1.Constants.*;
+import com.example.dat257_project_team_1.ExpandableCard;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +40,15 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView maps = (ImageView) findViewById(R.id.maps);
         ImageView sideMenu = (ImageView) findViewById(R.id.sideMenu);
+        CardView card1 = (CardView) findViewById(R.id.card1);
+
+        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+        View cardView = inflater.inflate(R.layout.expandable_card, null);
+        ArrayList<ExpandableCard> cardsList = new ArrayList<>();
+        addCardViews(cardsList);
+
+        card1.addView(cardView);
+
         maps.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // your code here
@@ -119,4 +137,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SideMenu.class);
         startActivity(intent);
     }
+
+    private void addCardViews(ArrayList<ExpandableCard> x){
+        for (int i = 0; i < 10; i++){
+            x.add(new ExpandableCard());
+        }
+    }
+
 }

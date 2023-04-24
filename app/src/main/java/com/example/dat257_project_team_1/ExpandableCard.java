@@ -21,6 +21,7 @@ import android.view.MenuItem;
 
 
 public class ExpandableCard extends AppCompatActivity{
+    TextView locationName;
     TextView cardContent;
     LinearLayout cardLayout;
 
@@ -29,7 +30,8 @@ public class ExpandableCard extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.expandable_card);
 
-        cardContent = findViewById(R.id.cardContent);
+        locationName = findViewById(R.id.locationName);
+        cardContent = findViewById(R.id.cardAddress);
         cardLayout = findViewById(R.id.cardLayout);
     }
 
