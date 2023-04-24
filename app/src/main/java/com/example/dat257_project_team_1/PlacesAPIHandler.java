@@ -21,13 +21,25 @@ public class PlacesAPIHandler {
         recyclingCenters = new ArrayList<>();
     }
 
+    /**
+     * Getter for the recycling centers. Does not call the API and updates the results, only returns the list
+     * PlacesAPIHandler.recyclingCenters. Use PlacesAPIHandler.updateRecyclingCenters to update the list.
+     *
+     * @return the list of the 10 nearest recycling centers.
+     */
     public ArrayList<RecyclingCenter> getRecyclingCenters() {
         return recyclingCenters;
     }
 
-    public void updateRecyclingCenters(Location currentLocation) {
+    /**
+     * Calls the API and updates the list PlacesAPIHandler.recyclingCenters with the 10 nearest recycling centers to the
+     * given location. To get the recycling centers, use PlacesAPIHandler.getRecyclingCenters().
+     *
+     * @param location the location to search from.
+     */
+    public void updateRecyclingCenters(Location location) {
         // https://developers.google.com/maps/documentation/places/web-service/search-nearby
-        String placesAPIUrl = constructPlacesAPIUrl(currentLocation);
+        String placesAPIUrl = constructPlacesAPIUrl(location);
         Request request = new Request.Builder()
                 .url(placesAPIUrl)
                 .method("GET", null)
