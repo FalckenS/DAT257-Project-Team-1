@@ -15,11 +15,12 @@ public class RecyclingCenter {
         this.name = name;
         this.address = address;
         this.location = location;
-        this.recyclableMaterials = String["All"];
-        this.accessibleByCar = true;
-        this.accessibleForDisabled = true;
+        //this.recyclableMaterials = String["All"];
+        //this.accessibleByCar = true;
+        //this.accessibleForDisabled = true;
     }
 
+    /*
     public RecyclingCenter(String name, String address, Location location
    String[] recycleableMaterials, boolean accessibleByCar, boolean accessibleForDisabled )
     {
@@ -30,6 +31,7 @@ public class RecyclingCenter {
         this.accessibleByCar = accessibleByCar;
         this.accessibleForDisabled = accessibleForDisabled;
     }
+    */
 
 
     public String getName() {
@@ -43,6 +45,8 @@ public class RecyclingCenter {
     public Location getLocation() {
         return location;
     }
+
+    /*
 
     public String[] getRecyclableMaterials() {
         return recyclableMaterials;
@@ -67,5 +71,5 @@ public class RecyclingCenter {
     public void setAccessibleForDisabled(boolean accessibleByCar) {
         this.accessibleByCar = accessibleByCar;
     }
-
+    */
 }
