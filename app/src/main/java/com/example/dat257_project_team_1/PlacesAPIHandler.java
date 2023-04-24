@@ -2,6 +2,10 @@ package com.example.dat257_project_team_1;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import android.location.Location;
 import okhttp3.*;
 
@@ -9,12 +13,12 @@ import static com.example.dat257_project_team_1.Constants.*;
 
 public class PlacesAPIHandler {
 
-    private ArrayList<RecyclingCenter> recyclingCenters;
-
+    private final ArrayList<RecyclingCenter> recyclingCenters;
     private final OkHttpClient okHttpClient;
 
     public PlacesAPIHandler() {
         okHttpClient = new OkHttpClient().newBuilder().build();
+        recyclingCenters = new ArrayList<>();
     }
 
     public ArrayList<RecyclingCenter> getRecyclingCenters() {
@@ -23,20 +27,18 @@ public class PlacesAPIHandler {
 
     public void updateRecyclingCenters(Location currentLocation) {
         // https://developers.google.com/maps/documentation/places/web-service/search-nearby
-        MediaType mediaType = MediaType.parse("text/plain");
-        RequestBody body = RequestBody.create("", mediaType);
         String placesAPIUrl = constructPlacesAPIUrl(currentLocation);
         Request request = new Request.Builder()
                 .url(placesAPIUrl)
-                .method("get", body)
+                .method("GET", null)
                 .build();
-
         try {
             executeRequest(this, request);
         }
         catch (Exception e)
         {
             System.out.println("PlacesAPI request failed");
+            // TODO
         }
     }
 
@@ -60,15 +62,38 @@ public class PlacesAPIHandler {
             try {
                 placesAPIHandler.updateResults(okHttpClient.newCall(request).execute());
             }
-            catch (IOException e) {
+            catch (IOException | JSONException e) {
                 throw new RuntimeException(e);
             }
         }).start();
     }
 
-    private void updateResults(Response response) {
+    private void updateResults(Response response) throws IOException, JSONException {
         recyclingCenters.clear();
+        assert response.body() != null;
+        String responseJsonString = response.body().string();
+        JSONObject responseJsonObject = new JSONObject(responseJsonString);
+        JSONArray results = responseJsonObject.getJSONArray("results");
 
-        // TODO add results to recyclingCenters
+        for (int i = 0; i < results.length(); i++) {
+            JSONObject recyclingCenterJsonObject = results.getJSONObject(i);
+
+            String address = recyclingCenterJsonObject.getString("vicinity");
+            if (!recyclingCenters.isEmpty()) {
+                if (Objects.equals(recyclingCenters.get(recyclingCenters.size()-1).getAddress(), address)) {
+                    // Sometimes the same recycling center shows up several times. If this is the case, skip to the next one
+                    continue;
+                }
+            }
+            recyclingCenters.add(new RecyclingCenter(
+                    recyclingCenterJsonObject.getString("name"),
+                    address,
+                    LocationFactory.createLocation(
+                            recyclingCenterJsonObject.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
+                            recyclingCenterJsonObject.getJSONObject("geometry").getJSONObject("location").getDouble("lng"))));
+            if (recyclingCenters.size() == 10) {
+                break;
+            }
+        }
     }
 }
