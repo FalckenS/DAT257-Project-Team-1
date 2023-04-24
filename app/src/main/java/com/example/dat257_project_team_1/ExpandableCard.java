@@ -1,4 +1,4 @@
-package com.example.hellodroid;
+package com.example.dat257_project_team_1;
 
 import android.os.Bundle;
 import android.transition.AutoTransition;
@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import androidx.navigation.NavController;
+/*import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -16,6 +16,8 @@ import com.example.hellodroid.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+
+ */
 
 
 public class ExpandableCard extends AppCompatActivity{
