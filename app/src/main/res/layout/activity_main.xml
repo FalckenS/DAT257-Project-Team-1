@@ -25,7 +25,7 @@
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+        app:srcCompat="@android:drawable/ic_menu_sort_by_size" /><![CDATA[
 
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -33,24 +33,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
+
+    ]]>
     <androidx.appcompat.widget.AppCompatButton
             android:text=""
             android:layout_width="48dp"
             android:layout_height="48dp" android:id="@+id/searchButton"
             app:icon="@android:drawable/ic_menu_search"
-            android:layout_marginEnd="53dp" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="28dp"
             android:contentDescription="Submit search" app:iconGravity="textStart" app:iconPadding="0dp"
             android:background="@color/search_button_color"
-            app:layout_constraintStart_toEndOf="@+id/textInputLayout"
-            android:foreground="@android:drawable/ic_menu_search"/>
+            android:foreground="@android:drawable/ic_menu_search"
+            app:layout_constraintStart_toEndOf="@+id/textInputLayout" android:layout_marginEnd="28dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="80dp"
+    />
     <com.google.android.material.textfield.TextInputLayout
             android:layout_width="308dp"
             android:layout_height="48dp"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="28dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="40dp"
-            app:layout_constraintEnd_toStartOf="@+id/searchButton" android:id="@+id/textInputLayout"
-            app:hintEnabled="false">
+            android:id="@+id/textInputLayout"
+            app:hintEnabled="false"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="27dp"
+            app:layout_constraintEnd_toStartOf="@+id/searchButton"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="80dp">
 
         <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
