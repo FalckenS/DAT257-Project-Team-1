@@ -59,10 +59,11 @@ public class MainActivity extends AppCompatActivity {
 
         requestLocationPermission();
 
-        // TEMP
+        // --- TEMP ---
         locationPermissionGranted = false;
         currentLocation = LocationFactory.createLocation(57.35494277871453, 12.126514588022303);
         placesAPIHandler.updateRecyclingCenters(currentLocation);
+        // ------------
 
         if (locationPermissionGranted) {
             currentLocationInit();
@@ -133,7 +134,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Another check for location permission, needed to use requestLocationUpdates. Ignore.
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            requestLocationPermission();
+            if (!locationPermissionGranted) {
+                return;
+            }
         }
 
         fusedLocationClient.requestLocationUpdates(locationRequest,
