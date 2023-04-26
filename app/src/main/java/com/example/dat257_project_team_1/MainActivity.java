@@ -89,13 +89,30 @@ public class MainActivity extends AppCompatActivity {
         requestLocationPermission();
 
         if (coarseLocationPermissionGranted && fineLocationPermissionGranted) {
-            updateCurrentLocation(new ICurrentLocationTask() {
-                @Override
-                public void currentLocationTask(Location currentLocation) {
-                    placesAPIHandler.updateRecyclingCenters(currentLocation);
-                }
-            });
+            accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
         }
+    }
+
+    void accessCurrentLocation(ICurrentLocationTask currentLocationTask) {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission();
+            if (!(coarseLocationPermissionGranted && fineLocationPermissionGranted)) {
+                return;
+            }
+        }
+        fusedLocationClient.requestLocationUpdates(
+                new LocationRequest.Builder(0)
+                        .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                        .build(),
+                new LocationCallback() {
+                    @Override
+                    public void onLocationResult(@NotNull LocationResult locationResult) {
+                        currentLocationTask.currentLocationTask(locationResult.getLastLocation());
+                        fusedLocationClient.removeLocationUpdates(this);
+                    }
+                },
+                Looper.getMainLooper());
     }
 
     private void requestLocationPermission() {
@@ -128,31 +145,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateCurrentLocation(ICurrentLocationTask currentLocationTask) {
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        fusedLocationClient.requestLocationUpdates(
-                new LocationRequest.Builder(0)
-                        .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                        .build(),
-                new LocationCallback() {
-                    @Override
-                    public void onLocationResult(@NotNull LocationResult locationResult) {
-                        currentLocationTask.currentLocationTask(locationResult.getLastLocation());
-                        fusedLocationClient.removeLocationUpdates(this);
-                    }
-                },
-                Looper.getMainLooper());
-    }
-
     private void openMap(){
         //TODO/DONE
         //code to open map view goes here.
         Intent intent = new Intent(this, MapViewAct.class);
         startActivity(intent);
     }
+
     private void openSideMenu(){
         Intent intent = new Intent(this, SideMenu.class);
         startActivity(intent);
