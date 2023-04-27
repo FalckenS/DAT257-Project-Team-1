@@ -1,12 +1,18 @@
 package com.example.dat257_project_team_1;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import org.jetbrains.annotations.NotNull;
 import android.content.Context;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 import android.os.Bundle;
 import android.content.Intent;
 import android.widget.ImageView;
@@ -14,12 +20,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static com.example.dat257_project_team_1.Constants.*;
 
 public class MainActivity extends AppCompatActivity {
 
     private PlacesAPIHandler placesAPIHandler;
     private CurrentLocationHandler currentLocationHandler;
+    private TextInputEditText searchBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +38,24 @@ public class MainActivity extends AppCompatActivity {
 
         placesAPIHandler = new PlacesAPIHandler();
         currentLocationHandler = new CurrentLocationHandler(this);
+
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), API_KEY);
+        }
+
+        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK){
+                    Place place = Autocomplete.getPlaceFromIntent(result.getData());
+                    searchBar.setText(place.getAddress());
+                } else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR){
+                    // Todo: handle error
+                } else if (result.getResultCode() == RESULT_CANCELED){
+                    // user canceled the operation
+                }
+            }
+        });
 
         ImageView maps = (ImageView) findViewById(R.id.maps);
         ImageView sideMenu = (ImageView) findViewById(R.id.sideMenu);
@@ -44,18 +72,17 @@ public class MainActivity extends AppCompatActivity {
                 openSideMenu();
             }
         });
-        TextInputEditText searchBar = (TextInputEditText) findViewById(R.id.searchBar);
+        searchBar = findViewById(R.id.searchBar);
+        searchBar.setFocusable(false);
         // Placeholder search bar text field event listener
-        searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        searchBar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-                    textView.clearFocus();
-                    return true;
-                }
-                return false;
+            public void onClick(View view) {
+                List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
+
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountry("se")
+                        .build(MainActivity.this);
+                activityResultLauncher.launch(intent);
             }
         });
         AppCompatButton searchButton = (AppCompatButton) findViewById(R.id.searchButton);
