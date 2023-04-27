@@ -18,8 +18,8 @@ import static com.example.dat257_project_team_1.Constants.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CurrentLocationHandler currentLocationHandler;
     private PlacesAPIHandler placesAPIHandler;
+    private CurrentLocationHandler currentLocationHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
