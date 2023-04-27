@@ -109,10 +109,10 @@ public class PlacesAPIHandler {
         }
 
         // Debug
-        /*
+
         for (RecyclingCenter recyclingCenter : recyclingCenters) {
             System.out.println(recyclingCenter.getAddress());
         }
-        */
+
     }
 }
