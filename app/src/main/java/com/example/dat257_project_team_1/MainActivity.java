@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private PlacesAPIHandler placesAPIHandler;
     private CurrentLocationHandler currentLocationHandler;
     private TextInputEditText searchBar;
+    private Intent autoCompleteIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        autoCompleteIntentBuilder();
         ImageView maps = (ImageView) findViewById(R.id.maps);
         ImageView sideMenu = (ImageView) findViewById(R.id.sideMenu);
         maps.setOnClickListener(new View.OnClickListener() {
@@ -78,11 +80,7 @@ public class MainActivity extends AppCompatActivity {
         searchBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
-
-                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountry("se")
-                        .build(MainActivity.this);
-                activityResultLauncher.launch(intent);
+                activityResultLauncher.launch(autoCompleteIntent);
             }
         });
         AppCompatButton searchButton = (AppCompatButton) findViewById(R.id.searchButton);
@@ -90,13 +88,7 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    getCurrentFocus().clearFocus();
-                } catch (Exception e) {
-                    // handle exception
-                }
+                activityResultLauncher.launch(autoCompleteIntent);
             }
         });
 
@@ -109,6 +101,12 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         currentLocationHandler.onRequestPermissionsResult(requestCode, grantResults);
+    }
+
+    private void autoCompleteIntentBuilder(){
+        List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
+
+        autoCompleteIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountry("se").build(this);
     }
 
     private void openMap(){
