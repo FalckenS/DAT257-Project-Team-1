@@ -29,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
         placesAPIHandler = new PlacesAPIHandler();
         currentLocationHandler = new CurrentLocationHandler(this);
 
+        if (currentLocationHandler.isLocationPermissionGranted()) {
+            currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
+        }
+
         ImageView maps = (ImageView) findViewById(R.id.maps);
         ImageView sideMenu = (ImageView) findViewById(R.id.sideMenu);
         maps.setOnClickListener(new View.OnClickListener() {
@@ -72,10 +76,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        if (currentLocationHandler.isLocationPermissionGranted()) {
-            currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
-        }
     }
 
     @Override

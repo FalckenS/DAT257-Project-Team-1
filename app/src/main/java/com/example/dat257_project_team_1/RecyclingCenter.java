@@ -2,7 +2,7 @@ package com.example.dat257_project_team_1;
 
 import android.location.Location;
 
-public class RecyclingCenter {
+class RecyclingCenter {
 
     private final String name;
     private final String address;
