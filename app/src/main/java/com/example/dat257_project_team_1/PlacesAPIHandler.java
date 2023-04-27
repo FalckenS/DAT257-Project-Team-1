@@ -107,5 +107,12 @@ public class PlacesAPIHandler {
                 break;
             }
         }
+
+        // Debug
+        /*
+        for (RecyclingCenter recyclingCenter : recyclingCenters) {
+            System.out.println(recyclingCenter.getAddress());
+        }
+        */
     }
 }
