@@ -1,18 +1,15 @@
 package com.example.dat257_project_team_1;
 
-import android.transition.AutoTransition;
-import android.transition.TransitionManager;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 import android.os.Bundle;
 import android.content.Intent;
 import android.widget.ImageView;
@@ -22,32 +19,47 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 
-import static com.example.dat257_project_team_1.Constants.*;
-import com.example.dat257_project_team_1.ExpandableCard;
-
 public class MainActivity extends AppCompatActivity {
 
     private PlacesAPIHandler placesAPIHandler;
     private CurrentLocationHandler currentLocationHandler;
+    private static RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private static RecyclerView recyclerView;
+    private static ArrayList<DataModel> data;
+    static View.OnClickListener myOnClickListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        myOnClickListener = new MyOnClickListener(this);
+
+        recyclerView = (RecyclerView) findViewById(R.id.rv_list);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+       /* this.data = new ArrayList<>();
+        for (int i = 0; i < 10; i++){
+            this.data.add(new DataModel(
+                    "AAA",
+                    "BBB"
+            ));
+        }*/
+
+        adapter = new CustomAdapter(this.data);
+        recyclerView.setAdapter(adapter);
+
         placesAPIHandler = new PlacesAPIHandler();
         currentLocationHandler = new CurrentLocationHandler(this);
 
         ImageView maps = (ImageView) findViewById(R.id.maps);
         ImageView sideMenu = (ImageView) findViewById(R.id.sideMenu);
-        CardView card1 = (CardView) findViewById(R.id.card1);
-
-        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-        View cardView = inflater.inflate(R.layout.expandable_card, null);
-        ArrayList<ExpandableCard> cardsList = new ArrayList<>();
-        addCardViews(cardsList);
-
-        card1.addView(cardView);
 
         maps.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -96,6 +108,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private static class MyOnClickListener implements View.OnClickListener{
+        private final Context context;
+
+        private MyOnClickListener(Context context){
+            this.context = context;
+        }
+
+
+        @Override
+        public void onClick(View v) {
+
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -114,10 +140,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void addCardViews(ArrayList<ExpandableCard> x){
-        for (int i = 0; i < 10; i++){
-            x.add(new ExpandableCard());
-        }
-    }
+
 
 }
