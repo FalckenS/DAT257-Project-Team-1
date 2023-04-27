@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">DAT257-Project-Team-1</string>
-    <string name="insert_adress">Insert Adress</string>
-    <string name="insert_location_name_here">Insert Location Name Here</string>
+    <string name="search_text">Search location</string>
 </resources>
