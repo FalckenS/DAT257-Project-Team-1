@@ -11,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.example.dat257_project_team_1.Constants.*;
 
-public class CurrentLocationHandler {
+class CurrentLocationHandler {
 
-    private final Activity mainActivity;
     private boolean coarseLocationPermissionGranted;
     private boolean fineLocationPermissionGranted;
+    private final Activity mainActivity;
     private final FusedLocationProviderClient fusedLocationClient;
 
     public CurrentLocationHandler(Activity mainActivity) {
@@ -63,9 +63,6 @@ public class CurrentLocationHandler {
     }
 
     private void requestLocationPermission() {
-        coarseLocationPermissionGranted = false;
-        fineLocationPermissionGranted = false;
-
         if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(mainActivity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, COARSE_LOCATION_PERMISSION_CODE);
         }

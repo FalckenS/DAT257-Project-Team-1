@@ -11,7 +11,7 @@ import okhttp3.*;
 
 import static com.example.dat257_project_team_1.Constants.*;
 
-public class PlacesAPIHandler {
+class PlacesAPIHandler {
 
     private final ArrayList<RecyclingCenter> recyclingCenters;
     private final OkHttpClient okHttpClient;

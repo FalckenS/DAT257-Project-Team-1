@@ -11,8 +11,11 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import org.jetbrains.annotations.NotNull;
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.os.Bundle;
 import android.content.Intent;
 import android.widget.ImageView;
@@ -39,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
 
         placesAPIHandler = new PlacesAPIHandler();
         currentLocationHandler = new CurrentLocationHandler(this);
+
+        if (currentLocationHandler.isLocationPermissionGranted()) {
+            currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
+        }
 
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), API_KEY);
@@ -91,10 +98,6 @@ public class MainActivity extends AppCompatActivity {
                 activityResultLauncher.launch(autoCompleteIntent);
             }
         });
-
-        if (currentLocationHandler.isLocationPermissionGranted()) {
-            currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
-        }
     }
 
     @Override
