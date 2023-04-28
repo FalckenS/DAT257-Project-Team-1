@@ -24,23 +24,37 @@ public class MainActivity extends AppCompatActivity {
     private PlacesAPIHandler placesAPIHandler;
     private CurrentLocationHandler currentLocationHandler;
 
+    private ArrayList<TextView> locationNameList;
+    private ArrayList<TextView> cardAddressList;
+
+    private boolean cardsExist;
+
+    private ImageView maps;
+    private ImageView sideMenu;
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        cardsExist = false;
 
-        placesAPIHandler = new PlacesAPIHandler();
+        placesAPIHandler = new PlacesAPIHandler(this);
         currentLocationHandler = new CurrentLocationHandler(this);
 
         if (currentLocationHandler.isLocationPermissionGranted()) {
             currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
         }
 
-        ImageView maps = (ImageView) findViewById(R.id.maps);
-        ImageView sideMenu = (ImageView) findViewById(R.id.sideMenu);
-        ScrollView scrollView = (ScrollView) findViewById(R.id.rv_list);
+        locationNameList = new ArrayList<>();
+        cardAddressList = new ArrayList<>();
+
+        maps = (ImageView) findViewById(R.id.maps);
+        sideMenu = (ImageView) findViewById(R.id.sideMenu);
+        scrollView = (ScrollView) findViewById(R.id.rv_list);
+
+        scrollView.setVisibility(View.GONE);
 
         TextView locationName1 = (TextView) findViewById(R.id.locationName1);
         TextView locationName2 = (TextView) findViewById(R.id.locationName2);
@@ -53,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         TextView locationName9 = (TextView) findViewById(R.id.locationName9);
         TextView locationName10 = (TextView) findViewById(R.id.locationName10);
 
-        ArrayList<TextView> locationNameList = new ArrayList<>();
         locationNameList.add(locationName1);
         locationNameList.add(locationName2);
         locationNameList.add(locationName3);
@@ -76,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         TextView cardAddress9 = (TextView) findViewById(R.id.cardAddress9);
         TextView cardAddress10 = (TextView) findViewById(R.id.cardAddress10);
 
-        ArrayList<TextView> cardAddressList = new ArrayList<>();
         cardAddressList.add(cardAddress1);
         cardAddressList.add(cardAddress2);
         cardAddressList.add(cardAddress3);
@@ -87,13 +99,6 @@ public class MainActivity extends AppCompatActivity {
         cardAddressList.add(cardAddress8);
         cardAddressList.add(cardAddress9);
         cardAddressList.add(cardAddress10);
-
-
-        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-        inflater.inflate(R.layout.expandable_card, null, false);
-
-        populateCards(locationNameList, cardAddressList);
-
 
         maps.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -155,13 +160,20 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void populateCards(ArrayList<TextView> lnl, ArrayList<TextView> adl){
+    private void createCards() {
+        scrollView.setVisibility(View.VISIBLE);
+
+        cardsExist = true;
+    }
+
+    void populateCards() {
+        if (!cardsExist) {
+            createCards();
+        }
         for (int i = 0; i < placesAPIHandler.getRecyclingCenters().size(); i++) {
-            System.out.println(placesAPIHandler.getRecyclingCenters().get(i).getAddress());
-            if (i < lnl.size() && i < adl.size()){
-                System.out.println(i);
-                lnl.get(i).setText(placesAPIHandler.getRecyclingCenters().get(i).getName());
-                adl.get(i).setText(placesAPIHandler.getRecyclingCenters().get(i).getAddress());
+            if (i < locationNameList.size() && i < cardAddressList.size()){
+                locationNameList.get(i).setText(placesAPIHandler.getRecyclingCenters().get(i).getName());
+                cardAddressList.get(i).setText(placesAPIHandler.getRecyclingCenters().get(i).getAddress());
             }
         }
 
