@@ -4,6 +4,15 @@ import android.view.LayoutInflater;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.cardview.widget.CardView;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import org.jetbrains.annotations.NotNull;
 import android.content.Context;
 import android.view.KeyEvent;
@@ -18,11 +27,17 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.example.dat257_project_team_1.Constants.*;
 
 public class MainActivity extends AppCompatActivity {
 
     private PlacesAPIHandler placesAPIHandler;
     private CurrentLocationHandler currentLocationHandler;
+    private TextInputEditText searchBar;
+    private Intent autoCompleteIntent;
 
     private ArrayList<TextView> locationNameList;
     private ArrayList<TextView> cardAddressList;
@@ -100,6 +115,27 @@ public class MainActivity extends AppCompatActivity {
         cardAddressList.add(cardAddress9);
         cardAddressList.add(cardAddress10);
 
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), API_KEY);
+        }
+
+        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK){
+                    Place place = Autocomplete.getPlaceFromIntent(result.getData());
+                    searchBar.setText(place.getAddress());
+                } else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR){
+                    // Todo: handle error
+                } else if (result.getResultCode() == RESULT_CANCELED){
+                    // user canceled the operation
+                }
+            }
+        });
+
+        autoCompleteIntentBuilder();
+        ImageView maps = (ImageView) findViewById(R.id.maps);
+        ImageView sideMenu = (ImageView) findViewById(R.id.sideMenu);
         maps.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // your code here
@@ -112,18 +148,13 @@ public class MainActivity extends AppCompatActivity {
                 openSideMenu();
             }
         });
-        TextInputEditText searchBar = (TextInputEditText) findViewById(R.id.searchBar);
+        searchBar = findViewById(R.id.searchBar);
+        searchBar.setFocusable(false);
         // Placeholder search bar text field event listener
-        searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        searchBar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-                    textView.clearFocus();
-                    return true;
-                }
-                return false;
+            public void onClick(View view) {
+                activityResultLauncher.launch(autoCompleteIntent);
             }
         });
         AppCompatButton searchButton = (AppCompatButton) findViewById(R.id.searchButton);
@@ -131,13 +162,7 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    getCurrentFocus().clearFocus();
-                } catch (Exception e) {
-                    // handle exception
-                }
+                activityResultLauncher.launch(autoCompleteIntent);
             }
         });
     }
@@ -146,6 +171,12 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         currentLocationHandler.onRequestPermissionsResult(requestCode, grantResults);
+    }
+
+    private void autoCompleteIntentBuilder(){
+        List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
+
+        autoCompleteIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountry("se").build(this);
     }
 
     private void openMap(){
