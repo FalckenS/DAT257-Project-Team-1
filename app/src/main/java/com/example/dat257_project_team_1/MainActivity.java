@@ -53,6 +53,18 @@ public class MainActivity extends AppCompatActivity {
         TextView locationName9 = (TextView) findViewById(R.id.locationName9);
         TextView locationName10 = (TextView) findViewById(R.id.locationName10);
 
+        ArrayList<TextView> locationNameList = new ArrayList<>();
+        locationNameList.add(locationName1);
+        locationNameList.add(locationName2);
+        locationNameList.add(locationName3);
+        locationNameList.add(locationName4);
+        locationNameList.add(locationName5);
+        locationNameList.add(locationName6);
+        locationNameList.add(locationName7);
+        locationNameList.add(locationName8);
+        locationNameList.add(locationName9);
+        locationNameList.add(locationName10);
+
         TextView cardAddress1 = (TextView) findViewById(R.id.cardAddress1);
         TextView cardAddress2 = (TextView) findViewById(R.id.cardAddress2);
         TextView cardAddress3 = (TextView) findViewById(R.id.cardAddress3);
@@ -64,10 +76,23 @@ public class MainActivity extends AppCompatActivity {
         TextView cardAddress9 = (TextView) findViewById(R.id.cardAddress9);
         TextView cardAddress10 = (TextView) findViewById(R.id.cardAddress10);
 
+        ArrayList<TextView> cardAddressList = new ArrayList<>();
+        cardAddressList.add(cardAddress1);
+        cardAddressList.add(cardAddress2);
+        cardAddressList.add(cardAddress3);
+        cardAddressList.add(cardAddress4);
+        cardAddressList.add(cardAddress5);
+        cardAddressList.add(cardAddress6);
+        cardAddressList.add(cardAddress7);
+        cardAddressList.add(cardAddress8);
+        cardAddressList.add(cardAddress9);
+        cardAddressList.add(cardAddress10);
+
+
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         inflater.inflate(R.layout.expandable_card, null, false);
 
-
+        populateCards(locationNameList, cardAddressList);
 
 
         maps.setOnClickListener(new View.OnClickListener() {
@@ -130,5 +155,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void populateCards(ArrayList<TextView> lnl, ArrayList<TextView> adl){
+        for (int i = 0; i < placesAPIHandler.getRecyclingCenters().size(); i++) {
+            System.out.println(placesAPIHandler.getRecyclingCenters().get(i).getAddress());
+            if (i < lnl.size() && i < adl.size()){
+                System.out.println(i);
+                lnl.get(i).setText(placesAPIHandler.getRecyclingCenters().get(i).getName());
+                adl.get(i).setText(placesAPIHandler.getRecyclingCenters().get(i).getAddress());
+            }
+        }
 
+    }
 }
