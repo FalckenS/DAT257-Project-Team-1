@@ -14,6 +14,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="488dp"
+        android:layout_height="805dp"
+        app:srcCompat="@drawable/map"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="-37dp" />
+
     <SearchView
         android:id="@+id/mapSearch"
         android:layout_width="303dp"

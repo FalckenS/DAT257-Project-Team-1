@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         sideMenu.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // your code here
-                //should be something like sideMenu.bringToFront();
                 openSideMenu();
             }
         });
