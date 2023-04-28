@@ -1,9 +1,9 @@
 package com.example.dat257_project_team_1;
 
+import android.view.LayoutInflater;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.cardview.widget.CardView;
 import org.jetbrains.annotations.NotNull;
 import android.content.Context;
 import android.view.KeyEvent;
@@ -23,11 +23,6 @@ public class MainActivity extends AppCompatActivity {
 
     private PlacesAPIHandler placesAPIHandler;
     private CurrentLocationHandler currentLocationHandler;
-    private static RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private static RecyclerView recyclerView;
-    private static ArrayList<DataModel> data;
-    static View.OnClickListener myOnClickListener;
 
 
     @Override
@@ -35,31 +30,41 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        myOnClickListener = new MyOnClickListener(this);
-
-        recyclerView = (RecyclerView) findViewById(R.id.rv_list);
-        recyclerView.setHasFixedSize(true);
-
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-       /* this.data = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
-            this.data.add(new DataModel(
-                    "AAA",
-                    "BBB"
-            ));
-        }*/
-
-        adapter = new CustomAdapter(this.data);
-        recyclerView.setAdapter(adapter);
 
         placesAPIHandler = new PlacesAPIHandler();
         currentLocationHandler = new CurrentLocationHandler(this);
 
         ImageView maps = (ImageView) findViewById(R.id.maps);
         ImageView sideMenu = (ImageView) findViewById(R.id.sideMenu);
+        ScrollView scrollView = (ScrollView) findViewById(R.id.rv_list);
+
+        TextView locationName1 = (TextView) findViewById(R.id.locationName1);
+        TextView locationName2 = (TextView) findViewById(R.id.locationName2);
+        TextView locationName3 = (TextView) findViewById(R.id.locationName3);
+        TextView locationName4 = (TextView) findViewById(R.id.locationName4);
+        TextView locationName5 = (TextView) findViewById(R.id.locationName5);
+        TextView locationName6 = (TextView) findViewById(R.id.locationName6);
+        TextView locationName7 = (TextView) findViewById(R.id.locationName7);
+        TextView locationName8 = (TextView) findViewById(R.id.locationName8);
+        TextView locationName9 = (TextView) findViewById(R.id.locationName9);
+        TextView locationName10 = (TextView) findViewById(R.id.locationName10);
+
+        TextView cardAddress1 = (TextView) findViewById(R.id.cardAddress1);
+        TextView cardAddress2 = (TextView) findViewById(R.id.cardAddress2);
+        TextView cardAddress3 = (TextView) findViewById(R.id.cardAddress3);
+        TextView cardAddress4 = (TextView) findViewById(R.id.cardAddress4);
+        TextView cardAddress5 = (TextView) findViewById(R.id.cardAddress5);
+        TextView cardAddress6 = (TextView) findViewById(R.id.cardAddress6);
+        TextView cardAddress7 = (TextView) findViewById(R.id.cardAddress7);
+        TextView cardAddress8 = (TextView) findViewById(R.id.cardAddress8);
+        TextView cardAddress9 = (TextView) findViewById(R.id.cardAddress9);
+        TextView cardAddress10 = (TextView) findViewById(R.id.cardAddress10);
+
+        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+        inflater.inflate(R.layout.expandable_card, null, false);
+
+
+
 
         maps.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -108,20 +113,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private static class MyOnClickListener implements View.OnClickListener{
-        private final Context context;
-
-        private MyOnClickListener(Context context){
-            this.context = context;
-        }
-
-
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -139,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SideMenu.class);
         startActivity(intent);
     }
-
 
 
 }
