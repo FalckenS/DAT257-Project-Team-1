@@ -1,8 +1,12 @@
 package com.example.dat257_project_team_1;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import android.os.Handler;
+import android.os.Looper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,10 +17,14 @@ import static com.example.dat257_project_team_1.Constants.*;
 
 class PlacesAPIHandler {
 
+    private final MainActivity mainActivity;
+
     private final ArrayList<RecyclingCenter> recyclingCenters;
     private final OkHttpClient okHttpClient;
 
-    public PlacesAPIHandler() {
+    public PlacesAPIHandler(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+
         okHttpClient = new OkHttpClient().newBuilder().build();
         recyclingCenters = new ArrayList<>();
     }
@@ -58,7 +66,7 @@ class PlacesAPIHandler {
         String latitude     = String.valueOf(currentLocation.getLatitude());
         String longitude    = String.valueOf(currentLocation.getLongitude());
         String location     = latitude + "%2C" + longitude;
-        String keyword      = "recycling center";
+        String keyword      = "Recycling center";
         String opennow      = "true";
         String rankby       = "distance";
         return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
@@ -70,13 +78,15 @@ class PlacesAPIHandler {
     }
 
     private void executeRequest(PlacesAPIHandler placesAPIHandler, Request request) {
+        Handler mainHandler = new Handler(Looper.getMainLooper());
         new Thread(() -> {
             try {
                 placesAPIHandler.updateResults(okHttpClient.newCall(request).execute());
-            }
-            catch (IOException | JSONException e) {
+            } catch (IOException | JSONException e) {
                 throw new RuntimeException(e);
             }
+            // Call your method here
+            mainHandler.post(mainActivity::populateCards);
         }).start();
     }
 
