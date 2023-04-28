@@ -1,12 +1,15 @@
 package com.example.dat257_project_team_1;
 
+import android.view.LayoutInflater;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import androidx.cardview.widget.CardView;
 import org.jetbrains.annotations.NotNull;
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 import android.os.Bundle;
 import android.content.Intent;
 import android.widget.ImageView;
@@ -14,17 +17,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import static com.example.dat257_project_team_1.Constants.*;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private PlacesAPIHandler placesAPIHandler;
     private CurrentLocationHandler currentLocationHandler;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         placesAPIHandler = new PlacesAPIHandler();
         currentLocationHandler = new CurrentLocationHandler(this);
@@ -35,6 +40,36 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView maps = (ImageView) findViewById(R.id.maps);
         ImageView sideMenu = (ImageView) findViewById(R.id.sideMenu);
+        ScrollView scrollView = (ScrollView) findViewById(R.id.rv_list);
+
+        TextView locationName1 = (TextView) findViewById(R.id.locationName1);
+        TextView locationName2 = (TextView) findViewById(R.id.locationName2);
+        TextView locationName3 = (TextView) findViewById(R.id.locationName3);
+        TextView locationName4 = (TextView) findViewById(R.id.locationName4);
+        TextView locationName5 = (TextView) findViewById(R.id.locationName5);
+        TextView locationName6 = (TextView) findViewById(R.id.locationName6);
+        TextView locationName7 = (TextView) findViewById(R.id.locationName7);
+        TextView locationName8 = (TextView) findViewById(R.id.locationName8);
+        TextView locationName9 = (TextView) findViewById(R.id.locationName9);
+        TextView locationName10 = (TextView) findViewById(R.id.locationName10);
+
+        TextView cardAddress1 = (TextView) findViewById(R.id.cardAddress1);
+        TextView cardAddress2 = (TextView) findViewById(R.id.cardAddress2);
+        TextView cardAddress3 = (TextView) findViewById(R.id.cardAddress3);
+        TextView cardAddress4 = (TextView) findViewById(R.id.cardAddress4);
+        TextView cardAddress5 = (TextView) findViewById(R.id.cardAddress5);
+        TextView cardAddress6 = (TextView) findViewById(R.id.cardAddress6);
+        TextView cardAddress7 = (TextView) findViewById(R.id.cardAddress7);
+        TextView cardAddress8 = (TextView) findViewById(R.id.cardAddress8);
+        TextView cardAddress9 = (TextView) findViewById(R.id.cardAddress9);
+        TextView cardAddress10 = (TextView) findViewById(R.id.cardAddress10);
+
+        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+        inflater.inflate(R.layout.expandable_card, null, false);
+
+
+
+
         maps.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // your code here
@@ -94,4 +129,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SideMenu.class);
         startActivity(intent);
     }
+
+
 }
