@@ -78,15 +78,15 @@ class PlacesAPIHandler {
     }
 
     private void executeRequest(PlacesAPIHandler placesAPIHandler, Request request) {
-        Handler mainHandler = new Handler(Looper.getMainLooper());
+        Handler handler = new Handler(Looper.getMainLooper());
         new Thread(() -> {
             try {
                 placesAPIHandler.updateResults(okHttpClient.newCall(request).execute());
-            } catch (IOException | JSONException e) {
+            }
+            catch (IOException | JSONException e) {
                 throw new RuntimeException(e);
             }
-            // Call your method here
-            mainHandler.post(mainActivity::populateCards);
+            handler.post(mainActivity::populateCards);
         }).start();
     }
 
@@ -119,10 +119,9 @@ class PlacesAPIHandler {
         }
 
         // Debug
-        /*
+        System.out.println("Num of RC: " + recyclingCenters.size());
         for (RecyclingCenter recyclingCenter : recyclingCenters) {
             System.out.println(recyclingCenter.getAddress());
         }
-        */
     }
 }
