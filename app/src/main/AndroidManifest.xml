@@ -40,11 +40,11 @@ xmlns:tools="http://schemas.android.com/tools"
             </intent-filter>
         </activity>
         <activity
-            android:name=".SideMenu"
+            android:name=".SideMenuActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"/>
         <activity
-            android:name=".MapViewAct"
+            android:name=".MapViewActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"/>
     </application>

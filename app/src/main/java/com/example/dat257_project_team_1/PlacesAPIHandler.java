@@ -117,11 +117,5 @@ class PlacesAPIHandler {
                 break;
             }
         }
-
-        // Debug
-        System.out.println("Num of RC: " + recyclingCenters.size());
-        for (RecyclingCenter recyclingCenter : recyclingCenters) {
-            System.out.println(recyclingCenter.getAddress());
-        }
     }
 }

@@ -2,12 +2,11 @@ package com.example.dat257_project_team_1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-public class SideMenu extends AppCompatActivity {
+public class SideMenuActivity extends AppCompatActivity {
 
 
     @Override
