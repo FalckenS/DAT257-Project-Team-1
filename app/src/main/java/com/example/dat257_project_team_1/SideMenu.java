@@ -1,8 +1,9 @@
 package com.example.dat257_project_team_1;
 
+import android.content.Intent;
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ public class SideMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.side_menu);
         ImageView closeSideMenu = (ImageView) findViewById(R.id.closeSideMenu);
+        Button settingsButton = (Button) findViewById(R.id.Settings_button);
 
         closeSideMenu.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -24,5 +26,19 @@ public class SideMenu extends AppCompatActivity {
 
             }
         });
+
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("Click!");
+                openSettingsMenu();
+            }
+
+        });
+    }
+
+    private void openSettingsMenu(){
+        Intent intent = new Intent(this, SettingsMenu.class);
+        startActivity(intent);
     }
 }

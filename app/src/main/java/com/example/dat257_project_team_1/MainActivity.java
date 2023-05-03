@@ -91,9 +91,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         sideMenu.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // your code here
-                openSideMenu();
+                    public void onClick(View v) {
+                      openSideMenu();
             }
         });
         searchBar = findViewById(R.id.searchBar);
