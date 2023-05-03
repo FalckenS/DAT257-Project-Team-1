@@ -1,5 +1,6 @@
 package com.example.dat257_project_team_1;
 
+import org.jetbrains.annotations.NotNull;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
@@ -7,24 +8,14 @@ import android.os.Looper;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.google.android.gms.location.*;
-import org.jetbrains.annotations.NotNull;
 
 import static com.example.dat257_project_team_1.Constants.*;
 
-class CurrentLocationHandler {
+class CurrentLocationHelper {
 
-    private final Activity activity;
-    private final FusedLocationProviderClient fusedLocationClient;
-
-    public CurrentLocationHandler(Activity activity) {
-        this.activity = activity;
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
+    static void accessCurrentLocation(Activity activity, ICurrentLocationTask currentLocationTask) {
         requestLocationPermission(activity);
-    }
-
-    void accessCurrentLocation(ICurrentLocationTask currentLocationTask) {
-
-        fusedLocationClient.flushLocations();
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
 
         if (    ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -46,8 +37,6 @@ class CurrentLocationHandler {
                 },
                 Looper.getMainLooper());
     }
-
-    /*---------------------------------------------------- Static ----------------------------------------------------*/
 
     static boolean isLocationPermissionGranted(Activity activity) {
         if (    ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&

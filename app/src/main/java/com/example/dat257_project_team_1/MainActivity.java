@@ -1,6 +1,5 @@
 package com.example.dat257_project_team_1;
 
-import android.location.Location;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResult;
@@ -13,7 +12,6 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import org.jetbrains.annotations.NotNull;
 import android.view.View;
 import android.os.Bundle;
 import android.content.Intent;
@@ -28,10 +26,9 @@ import java.util.List;
 
 import static com.example.dat257_project_team_1.Constants.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IRecyclingCentersObserver {
 
     private PlacesAPIHandler placesAPIHandler;
-    private CurrentLocationHandler currentLocationHandler;
     private TextInputEditText searchBar;
     private Intent autoCompleteIntent;
 
@@ -54,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
         locationNameList = new ArrayList<>();
         cardAddressList = new ArrayList<>();
 
-        placesAPIHandler = new PlacesAPIHandler(this);
-        currentLocationHandler = new CurrentLocationHandler(this);
+        placesAPIHandler = new PlacesAPIHandler();
+        placesAPIHandler.addObservers(this);
 
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), API_KEY);
@@ -115,10 +112,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (CurrentLocationHandler.isLocationPermissionGranted(this)) {
-            currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
+        if (CurrentLocationHelper.isLocationPermissionGranted(this)) {
+            CurrentLocationHelper.accessCurrentLocation(this, currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
             /*
-            currentLocationHandler.accessCurrentLocation(new ICurrentLocationTask() {
+            currentLocationHandler.accessCurrentLocation(this, new ICurrentLocationTask() {
                 @Override
                 public void currentLocationTask(Location currentLocation) {
                     placesAPIHandler.updateRecyclingCenters(currentLocation);
@@ -129,6 +126,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*------------------------------------------------- Non-private -------------------------------------------------*/
+
+    public PlacesAPIHandler getPlacesAPIHandler() {
+        return placesAPIHandler;
+    }
 
     void populateCards() {
         ArrayList<RecyclingCenter> recyclingCenters = placesAPIHandler.getRecyclingCenters();
@@ -143,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
                 cardAddressList.get(i).setText(recyclingCenters.get(i).getAddress());
             }
         }
-
     }
 
     /*--------------------------------------------------- Private ---------------------------------------------------*/
@@ -239,6 +239,24 @@ public class MainActivity extends AppCompatActivity {
         }
         for (int i = numOfCardsToShow; i < 10; i++) {
             cardList.get(i).setVisibility(View.GONE);
+        }
+    }
+
+    /*--------------------------------------------------- Other ---------------------------------------------------*/
+
+    @Override
+    public void updateIRecyclingCenters() {
+        ArrayList<RecyclingCenter> recyclingCenters = placesAPIHandler.getRecyclingCenters();
+        if (!cardsExist) {
+            scrollView.setVisibility(View.VISIBLE);
+            cardsExist = true;
+        }
+        showCards(recyclingCenters.size());
+        for (int i = 0; i < recyclingCenters.size(); i++) {
+            if (i < locationNameList.size() && i < cardAddressList.size()){
+                locationNameList.get(i).setText(recyclingCenters.get(i).getName());
+                cardAddressList.get(i).setText(recyclingCenters.get(i).getAddress());
+            }
         }
     }
 }

@@ -1,10 +1,8 @@
 package com.example.dat257_project_team_1;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Objects;
-
 import android.os.Handler;
 import android.os.Looper;
 import org.json.JSONArray;
@@ -17,16 +15,18 @@ import static com.example.dat257_project_team_1.Constants.*;
 
 class PlacesAPIHandler {
 
-    private final MainActivity mainActivity;
-
-    private final ArrayList<RecyclingCenter> recyclingCenters;
     private final OkHttpClient okHttpClient;
+    private final ArrayList<RecyclingCenter> recyclingCenters;
+    private final ArrayList<IRecyclingCentersObserver> observers;
 
-    public PlacesAPIHandler(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    public PlacesAPIHandler() {
+        this.okHttpClient = new OkHttpClient().newBuilder().build();
+        this.recyclingCenters = new ArrayList<>();
+        this.observers = new ArrayList<>();
+    }
 
-        okHttpClient = new OkHttpClient().newBuilder().build();
-        recyclingCenters = new ArrayList<>();
+    public void addObservers(IRecyclingCentersObserver observer) {
+        observers.add(observer);
     }
 
     /**
@@ -86,7 +86,11 @@ class PlacesAPIHandler {
             catch (IOException | JSONException e) {
                 throw new RuntimeException(e);
             }
-            handler.post(mainActivity::populateCards);
+            handler.post(() -> {
+                for (IRecyclingCentersObserver observer : observers) {
+                    observer.updateIRecyclingCenters();
+                }
+            });
         }).start();
     }
 
