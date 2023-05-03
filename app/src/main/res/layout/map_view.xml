@@ -9,20 +9,21 @@
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="@android:string/fingerprint_icon_content_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@android:string/fingerprint_icon_content_description"/>
+    />
 
     <SearchView
-        android:id="@+id/mapSearch"
-        android:layout_width="303dp"
-        android:layout_height="69dp"
-        android:layout_marginTop="24dp"
-        android:background="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/mapView"
+            android:id="@+id/mapSearch"
+            android:layout_width="303dp"
+            android:layout_height="69dp"
+            android:layout_marginTop="24dp"
+            android:background="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/mapView"
     />
 </androidx.constraintlayout.widget.ConstraintLayout>

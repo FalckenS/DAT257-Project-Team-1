@@ -1,5 +1,6 @@
 package com.example.dat257_project_team_1;
 
+import android.location.Location;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResult;
@@ -114,8 +115,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (currentLocationHandler.isLocationPermissionGranted()) {
+        if (CurrentLocationHandler.isLocationPermissionGranted(this)) {
             currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
+            /*
+            currentLocationHandler.accessCurrentLocation(new ICurrentLocationTask() {
+                @Override
+                public void currentLocationTask(Location currentLocation) {
+                    placesAPIHandler.updateRecyclingCenters(currentLocation);
+                }
+            });
+            */
         }
     }
 
@@ -231,13 +240,5 @@ public class MainActivity extends AppCompatActivity {
         for (int i = numOfCardsToShow; i < 10; i++) {
             cardList.get(i).setVisibility(View.GONE);
         }
-    }
-
-    /*---------------------------------------------------- Other ----------------------------------------------------*/
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        currentLocationHandler.onRequestPermissionsResult(requestCode, grantResults);
     }
 }

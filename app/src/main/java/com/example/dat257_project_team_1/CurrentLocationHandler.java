@@ -13,29 +13,23 @@ import static com.example.dat257_project_team_1.Constants.*;
 
 class CurrentLocationHandler {
 
-    private boolean coarseLocationPermissionGranted;
-    private boolean fineLocationPermissionGranted;
-    private final Activity mainActivity;
+    private final Activity activity;
     private final FusedLocationProviderClient fusedLocationClient;
 
-    public CurrentLocationHandler(Activity mainActivity) {
-        this.mainActivity = mainActivity;
-        coarseLocationPermissionGranted = false;
-        fineLocationPermissionGranted = false;
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(mainActivity);
-        requestLocationPermission();
-    }
-
-    boolean isLocationPermissionGranted() {
-        return coarseLocationPermissionGranted && fineLocationPermissionGranted;
+    public CurrentLocationHandler(Activity activity) {
+        this.activity = activity;
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
+        requestLocationPermission(activity);
     }
 
     void accessCurrentLocation(ICurrentLocationTask currentLocationTask) {
 
         fusedLocationClient.flushLocations();
-        if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestLocationPermission();
-            if (!isLocationPermissionGranted()) {
+
+        if (    ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission(activity);
+            if (!isLocationPermissionGranted(activity)) {
                 return;
             }
         }
@@ -53,27 +47,24 @@ class CurrentLocationHandler {
                 Looper.getMainLooper());
     }
 
-    void onRequestPermissionsResult(int requestCode, int[] grantResults) {
-        if (requestCode == COARSE_LOCATION_PERMISSION_CODE) {
-            coarseLocationPermissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    /*---------------------------------------------------- Static ----------------------------------------------------*/
+
+    static boolean isLocationPermissionGranted(Activity activity) {
+        if (    ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return false;
         }
-        if (requestCode == FINE_LOCATION_PERMISSION_CODE) {
-            fineLocationPermissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+        else {
+            return true;
         }
     }
 
-    private void requestLocationPermission() {
-        if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mainActivity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, COARSE_LOCATION_PERMISSION_CODE);
+    static void requestLocationPermission(Activity activity) {
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, COARSE_LOCATION_PERMISSION_CODE);
         }
-        else {
-            coarseLocationPermissionGranted = true;
-        }
-        if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mainActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_PERMISSION_CODE);
-        }
-        else {
-            fineLocationPermissionGranted = true;
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_PERMISSION_CODE);
         }
     }
 }

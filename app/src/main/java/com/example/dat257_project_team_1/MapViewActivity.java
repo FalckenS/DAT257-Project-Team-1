@@ -1,34 +1,43 @@
 package com.example.dat257_project_team_1;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.core.app.ActivityCompat;
 import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.MapStyleOptions;
 
 public class MapViewActivity extends AppCompatActivity {
 
     private MapView mapView;
     private SearchView mapSearch;
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_view);
-
         mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-
-        GoogleMapOptions options = new GoogleMapOptions()
-                .compassEnabled(true)
-                .mapType(GoogleMap.MAP_TYPE_NORMAL)
-                .zoomControlsEnabled(true);
-        mapView.getMapAsync(googleMap -> {
-            // Customize the map's features here
-        });
-
         mapSearch = (SearchView) findViewById(R.id.mapSearch);
 
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(googleMap -> {
+            googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            googleMap.setBuildingsEnabled(false);
+            googleMap.setTrafficEnabled(true);
+            googleMap.stopAnimation();
+            if (    ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                CurrentLocationHandler.requestLocationPermission(this);
+                if (!CurrentLocationHandler.isLocationPermissionGranted(this)) {
+                    return;
+                }
+            }
+            googleMap.setMyLocationEnabled(true);
+        });
     }
 
     @Override
