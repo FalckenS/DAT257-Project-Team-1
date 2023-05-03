@@ -75,9 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 if (result.getResultCode() == RESULT_OK){
                     Place place = Autocomplete.getPlaceFromIntent(result.getData());
                     searchBar.setText(place.getAddress());
-                    Location searchBarLocation = new Location("");
-                    searchBarLocation.setLatitude(Objects.requireNonNull(place.getLatLng()).latitude);
-                    searchBarLocation.setLongitude(place.getLatLng().longitude);
+                    Location searchBarLocation = buildLocationObject(Objects.requireNonNull(place.getLatLng()).latitude, place.getLatLng().longitude);
                     placesAPIHandler.updateRecyclingCenters(searchBarLocation);
                 } else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR){
                     // Todo: handle error
@@ -148,6 +146,14 @@ public class MainActivity extends AppCompatActivity {
     private void autoCompleteIntentBuilder(){
         List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
         autoCompleteIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountry("se").build(this);
+    }
+
+    private Location buildLocationObject(double latitude, double longitude){
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+
+        return location;
     }
 
     private void openMap(){
