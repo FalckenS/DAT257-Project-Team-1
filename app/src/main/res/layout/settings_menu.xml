@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-												   android:layout_width="match_parent"
-												   android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
+
+	<TextView
+			android:id="@+id/settings_text"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal"
+			android:textSize="32sp"
+			android:ems="10"
+			android:singleLine="false"
+			android:text="@string/settings_button_text"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"/>
+	<ScrollView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toBottomOf="@id/settings_text"
+			app:layout_constraintEnd_toEndOf="parent">
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+
+			<Switch
+					android:text="Test Switch"
+					android:textSize="18sp"
+					android:paddingLeft="5dp"
+					android:layout_width="match_parent"
+					android:layout_height="48dp"
+					android:id="@+id/test_switch"
+					tools:ignore="UseSwitchCompatOrMaterialXml"/>
+		</LinearLayout>
+	</ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

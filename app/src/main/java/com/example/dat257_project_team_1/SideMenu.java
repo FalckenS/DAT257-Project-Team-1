@@ -30,7 +30,6 @@ public class SideMenu extends AppCompatActivity {
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Click!");
                 openSettingsMenu();
             }
 
