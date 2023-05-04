@@ -6,4 +6,5 @@
 	<string name="distance"/>
 	<string name="address"/>
 	<string name="settings_button_text">Settings</string>
+    <string name="marker_description">Search for current location</string>
 </resources>

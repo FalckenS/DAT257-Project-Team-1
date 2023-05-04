@@ -1,6 +1,7 @@
 package com.example.dat257_project_team_1;
 
 import android.location.Location;
+import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResult;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private PlacesAPIHandler placesAPIHandler;
     private CurrentLocationHandler currentLocationHandler;
-    private TextInputEditText searchBar;
+    private EditText searchBar;
     private Intent autoCompleteIntent;
 
     private boolean cardsExist;
