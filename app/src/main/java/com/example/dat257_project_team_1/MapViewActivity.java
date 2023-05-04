@@ -1,6 +1,8 @@
 package com.example.dat257_project_team_1;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.SearchView;
@@ -8,16 +10,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import com.google.android.gms.maps.*;
 
-public class MapViewActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MapViewActivity extends AppCompatActivity implements IRecyclingCentersObserver {
 
     private MapView mapView;
     private SearchView mapSearch;
 
-    private PlacesAPIHandler placesAPIHandler;
+    private ArrayList<RecyclingCenter> recyclingCenters;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_view);
+
+        recyclingCenters = new ArrayList<>();
 
         mapView = (MapView) findViewById(R.id.mapView);
         mapSearch = (SearchView) findViewById(R.id.mapSearch);
@@ -73,5 +79,15 @@ public class MapViewActivity extends AppCompatActivity {
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+
+    @Override
+    public void saveNewRecyclingCenters(ArrayList<RecyclingCenter> recyclingCenters) {
+        this.recyclingCenters = recyclingCenters;
+    }
+
+    @Override
+    public void updateRecyclingCenters() {
+        // TODO
     }
 }

@@ -28,7 +28,6 @@ import static com.example.dat257_project_team_1.Constants.*;
 
 public class MainActivity extends AppCompatActivity implements IRecyclingCentersObserver {
 
-    private PlacesAPIHandler placesAPIHandler;
     private TextInputEditText searchBar;
     private Intent autoCompleteIntent;
 
@@ -41,18 +40,19 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
     private ImageView sideMenu;
     private ScrollView scrollView;
 
+    private ArrayList<RecyclingCenter> recyclingCenters;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        recyclingCenters = new ArrayList<>();
+
         cardsExist = false;
         cardList = new ArrayList<>();
         locationNameList = new ArrayList<>();
         cardAddressList = new ArrayList<>();
-
-        placesAPIHandler = new PlacesAPIHandler();
-        placesAPIHandler.addObservers(this);
 
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), API_KEY);
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         });
 
         if (CurrentLocationHelper.isLocationPermissionGranted(this)) {
-            CurrentLocationHelper.accessCurrentLocation(this, currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
+            CurrentLocationHelper.accessCurrentLocation(this, currentLocation -> PlacesAPIHandler.updateRecyclingCenters(currentLocation, this));
             /*
             currentLocationHandler.accessCurrentLocation(this, new ICurrentLocationTask() {
                 @Override
@@ -125,27 +125,6 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         }
     }
 
-    /*------------------------------------------------- Non-private -------------------------------------------------*/
-
-    public PlacesAPIHandler getPlacesAPIHandler() {
-        return placesAPIHandler;
-    }
-
-    void populateCards() {
-        ArrayList<RecyclingCenter> recyclingCenters = placesAPIHandler.getRecyclingCenters();
-        if (!cardsExist) {
-            scrollView.setVisibility(View.VISIBLE);
-            cardsExist = true;
-        }
-        showCards(recyclingCenters.size());
-        for (int i = 0; i < recyclingCenters.size(); i++) {
-            if (i < locationNameList.size() && i < cardAddressList.size()){
-                locationNameList.get(i).setText(recyclingCenters.get(i).getName());
-                cardAddressList.get(i).setText(recyclingCenters.get(i).getAddress());
-            }
-        }
-    }
-
     /*--------------------------------------------------- Private ---------------------------------------------------*/
 
     private void autoCompleteIntentBuilder(){
@@ -154,8 +133,8 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
     }
 
     private void openMap(){
-        //TODO/DONE
-        //code to open map view goes here.
+        // Code to open map view
+
         Intent intent = new Intent(this, MapViewActivity.class);
         startActivity(intent);
     }
@@ -245,8 +224,12 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
     /*--------------------------------------------------- Other ---------------------------------------------------*/
 
     @Override
-    public void updateIRecyclingCenters() {
-        ArrayList<RecyclingCenter> recyclingCenters = placesAPIHandler.getRecyclingCenters();
+    public void saveNewRecyclingCenters(ArrayList<RecyclingCenter> recyclingCenters) {
+        this.recyclingCenters = recyclingCenters;
+    }
+
+    @Override
+    public void updateRecyclingCenters() {
         if (!cardsExist) {
             scrollView.setVisibility(View.VISIBLE);
             cardsExist = true;

@@ -15,37 +15,7 @@ import static com.example.dat257_project_team_1.Constants.*;
 
 class PlacesAPIHandler {
 
-    private final OkHttpClient okHttpClient;
-    private final ArrayList<RecyclingCenter> recyclingCenters;
-    private final ArrayList<IRecyclingCentersObserver> observers;
-
-    public PlacesAPIHandler() {
-        this.okHttpClient = new OkHttpClient().newBuilder().build();
-        this.recyclingCenters = new ArrayList<>();
-        this.observers = new ArrayList<>();
-    }
-
-    public void addObservers(IRecyclingCentersObserver observer) {
-        observers.add(observer);
-    }
-
-    /**
-     * Getter for the recycling centers. Does not call the API and updates the results, only returns the list
-     * PlacesAPIHandler.recyclingCenters. Use PlacesAPIHandler.updateRecyclingCenters to update the list.
-     *
-     * @return the list of the 10 nearest recycling centers.
-     */
-    public ArrayList<RecyclingCenter> getRecyclingCenters() {
-        return recyclingCenters;
-    }
-
-    /**
-     * Calls the API and updates the list PlacesAPIHandler.recyclingCenters with the 10 nearest recycling centers to the
-     * given location. To get the recycling centers, use PlacesAPIHandler.getRecyclingCenters().
-     *
-     * @param location the location to search from.
-     */
-    public void updateRecyclingCenters(Location location) {
+    static public void updateRecyclingCenters(Location location, IRecyclingCentersObserver recyclingCentersObserver) {
         // https://developers.google.com/maps/documentation/places/web-service/search-nearby
         String placesAPIUrl = constructPlacesAPIUrl(location);
         Request request = new Request.Builder()
@@ -53,7 +23,7 @@ class PlacesAPIHandler {
                 .method("GET", null)
                 .build();
         try {
-            executeRequest(this, request);
+            executeRequest(request, recyclingCentersObserver);
         }
         catch (Exception e)
         {
@@ -62,40 +32,23 @@ class PlacesAPIHandler {
         }
     }
 
-    private String constructPlacesAPIUrl(Location currentLocation) {
-        String latitude     = String.valueOf(currentLocation.getLatitude());
-        String longitude    = String.valueOf(currentLocation.getLongitude());
-        String location     = latitude + "%2C" + longitude;
-        String keyword      = "Recycling center";
-        String opennow      = "true";
-        String rankby       = "distance";
-        return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
-                "&location="    + location +
-                "&keyword="     + keyword +
-                "&opennow="     + opennow +
-                "&rankby="      + rankby +
-                "&key="         + API_KEY;
-    }
-
-    private void executeRequest(PlacesAPIHandler placesAPIHandler, Request request) {
+    static private void executeRequest(Request request, IRecyclingCentersObserver recyclingCentersObserver) {
         Handler handler = new Handler(Looper.getMainLooper());
         new Thread(() -> {
             try {
-                placesAPIHandler.updateResults(okHttpClient.newCall(request).execute());
+                OkHttpClient okHttpClient = new OkHttpClient().newBuilder().build();
+                ArrayList<RecyclingCenter> recyclingCenters = getResults(okHttpClient.newCall(request).execute());
+                recyclingCentersObserver.saveNewRecyclingCenters(recyclingCenters);
             }
             catch (IOException | JSONException e) {
                 throw new RuntimeException(e);
             }
-            handler.post(() -> {
-                for (IRecyclingCentersObserver observer : observers) {
-                    observer.updateIRecyclingCenters();
-                }
-            });
+            handler.post(recyclingCentersObserver::updateRecyclingCenters);
         }).start();
     }
 
-    private void updateResults(Response response) throws IOException, JSONException {
-        recyclingCenters.clear();
+    static private ArrayList<RecyclingCenter> getResults(Response response) throws IOException, JSONException {
+        ArrayList<RecyclingCenter> recyclingCenters = new ArrayList<>();
         assert response.body() != null;
         String responseJsonString = response.body().string();
         JSONObject responseJsonObject = new JSONObject(responseJsonString);
@@ -121,5 +74,21 @@ class PlacesAPIHandler {
                 break;
             }
         }
+        return recyclingCenters;
+    }
+
+    static private String constructPlacesAPIUrl(Location currentLocation) {
+        String latitude     = String.valueOf(currentLocation.getLatitude());
+        String longitude    = String.valueOf(currentLocation.getLongitude());
+        String location     = latitude + "%2C" + longitude;
+        String keyword      = "Recycling center";
+        String opennow      = "true";
+        String rankby       = "distance";
+        return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
+                "&location="    + location +
+                "&keyword="     + keyword +
+                "&opennow="     + opennow +
+                "&rankby="      + rankby +
+                "&key="         + API_KEY;
     }
 }
