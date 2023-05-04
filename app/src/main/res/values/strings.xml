@@ -6,4 +6,6 @@
 	<string name="distance"/>
 	<string name="address"/>
 	<string name="settings_button_text">Settings</string>
+	<string name="night_mode_switch">Night Mode</string>
+	<string name="dark_mode_switch">Dark Mode</string>
 </resources>
