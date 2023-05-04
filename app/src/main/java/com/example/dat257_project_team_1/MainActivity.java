@@ -118,6 +118,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ImageView setCurrentLocationMarker = findViewById(R.id.setCurrentLocationMarker);
+        setCurrentLocationMarker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentLocationHandler.isLocationPermissionGranted()) {
+                    searchBar.setText("Current location");
+                    currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
+                }
+            }
+        });
+
         if (currentLocationHandler.isLocationPermissionGranted()) {
             currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
         }
