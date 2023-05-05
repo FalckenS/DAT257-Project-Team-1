@@ -1,14 +1,12 @@
 package com.example.dat257_project_team_1;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Objects;
-import android.os.Handler;
-import android.os.Looper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.io.IOException;
+import java.util.ArrayList;
+import android.os.Handler;
+import android.os.Looper;
 import android.location.Location;
 import okhttp3.*;
 
@@ -67,19 +65,19 @@ class PlacesAPIHandler {
         }
 
         /*for (RecyclingCenter recyclingCenter : recyclingCenters) {
-            System.out.println(CurrentLocationHelper.calculateDistance(currentLocation, recyclingCenter.getLocation()));
+            System.out.println(CurrentLocationHandler.calculateDistance(currentLocation, recyclingCenter.getLocation()));
         }
 
         recyclingCenters.sort((recyclingCenter1, recyclingCenter2) -> {
-            double distance1 = CurrentLocationHelper.calculateDistance(recyclingCenter1.getLocation(), currentLocation);
-            double distance2 = CurrentLocationHelper.calculateDistance(recyclingCenter2.getLocation(), currentLocation);
+            double distance1 = CurrentLocationHandler.calculateDistance(recyclingCenter1.getLocation(), currentLocation);
+            double distance2 = CurrentLocationHandler.calculateDistance(recyclingCenter2.getLocation(), currentLocation);
             return Double.compare(distance1, distance2);
         });
 
         System.out.println("-----------------------");
 
         for (RecyclingCenter recyclingCenter : recyclingCenters) {
-            System.out.println(CurrentLocationHelper.calculateDistance(currentLocation, recyclingCenter.getLocation()));
+            System.out.println(CurrentLocationHandler.calculateDistance(currentLocation, recyclingCenter.getLocation()));
         }*/
 
         return recyclingCenters;

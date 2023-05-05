@@ -1,8 +1,7 @@
 package com.example.dat257_project_team_1;
 
+import java.util.ArrayList;
 import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -12,8 +11,6 @@ import androidx.core.app.ActivityCompat;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.ArrayList;
 
 public class MapViewActivity extends AppCompatActivity implements IRecyclingCentersObserver {
 
@@ -28,8 +25,8 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
 
         recyclingCenters = new ArrayList<>();
 
-        mapView = (MapView) findViewById(R.id.mapView);
-        mapSearch = (SearchView) findViewById(R.id.mapSearch);
+        mapView = findViewById(R.id.mapView);
+        mapSearch = findViewById(R.id.mapSearch);
 
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(googleMap -> {
@@ -39,10 +36,10 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
     }
 
     private void googleMapInit() {
-        if (    ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            CurrentLocationHelper.requestLocationPermission(this);
-            if (!CurrentLocationHelper.isLocationPermissionGranted(this)) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            CurrentLocationHandler.requestLocationPermission(this);
+            if (!CurrentLocationHandler.isLocationPermissionGranted(this)) {
                 return;
             }
         }
@@ -50,7 +47,7 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
         googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         googleMap.setBuildingsEnabled(false);
         googleMap.setTrafficEnabled(true);
-        CurrentLocationHelper.accessCurrentLocation(this, currentLocation -> {
+        CurrentLocationHandler.accessCurrentLocation(this, currentLocation -> {
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 10));
             PlacesAPIHandler.updateRecyclingCenters(currentLocation, this);
         });
