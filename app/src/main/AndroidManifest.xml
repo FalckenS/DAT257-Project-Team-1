@@ -44,6 +44,10 @@ xmlns:tools="http://schemas.android.com/tools"
             android:exported="false"
             android:parentActivityName=".MainActivity"/>
         <activity
+                android:name=".SettingsMenu"
+                android:exported="false"
+                android:parentActivityName=".MainActivity"/>
+        <activity
             android:name=".MapViewActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"/>
