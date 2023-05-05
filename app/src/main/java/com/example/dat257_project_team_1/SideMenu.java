@@ -17,7 +17,7 @@ public class SideMenu extends AppCompatActivity {
         setContentView(R.layout.side_menu);
         ImageView closeSideMenu = (ImageView) findViewById(R.id.closeLogin);
         Button settingsButton = (Button) findViewById(R.id.Settings_button);
-        Button logIn = (Button) findViewById(R.id.logIn);
+        Button logIn = (Button) findViewById(R.id.signUp);
 
         closeSideMenu.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
