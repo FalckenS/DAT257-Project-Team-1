@@ -1,5 +1,7 @@
 package com.example.dat257_project_team_1;
 
+import android.location.Location;
+import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResult;
@@ -19,11 +21,11 @@ import android.content.Intent;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.dat257_project_team_1.Constants.*;
 
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private PlacesAPIHandler placesAPIHandler;
     private CurrentLocationHandler currentLocationHandler;
-    private TextInputEditText searchBar;
+    private EditText searchBar;
     private Intent autoCompleteIntent;
 
     private boolean cardsExist;
@@ -73,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
                 if (result.getResultCode() == RESULT_OK){
                     Place place = Autocomplete.getPlaceFromIntent(result.getData());
                     searchBar.setText(place.getAddress());
+                    Location searchBarLocation = buildLocationObject(Objects.requireNonNull(place.getLatLng()).latitude, place.getLatLng().longitude);
+                    placesAPIHandler.updateRecyclingCenters(searchBarLocation);
                 } else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR){
                     // Todo: handle error
                 } else if (result.getResultCode() == RESULT_CANCELED){
@@ -113,6 +117,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ImageView setCurrentLocationMarker = findViewById(R.id.setCurrentLocationMarker);
+        setCurrentLocationMarker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentLocationHandler.isLocationPermissionGranted()) {
+                    searchBar.setText("Current location");
+                    currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
+                }
+            }
+        });
+
         if (currentLocationHandler.isLocationPermissionGranted()) {
             currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
         }
@@ -141,6 +156,14 @@ public class MainActivity extends AppCompatActivity {
     private void autoCompleteIntentBuilder(){
         List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
         autoCompleteIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountry("se").build(this);
+    }
+
+    private Location buildLocationObject(double latitude, double longitude){
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+
+        return location;
     }
 
     private void openMap(){

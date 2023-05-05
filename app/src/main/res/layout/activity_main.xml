@@ -392,26 +392,26 @@
             android:contentDescription="Submit search" app:iconGravity="textStart" app:iconPadding="0dp"
             android:background="@color/search_button_color"
             android:foreground="@android:drawable/ic_menu_search"
-            app:layout_constraintStart_toEndOf="@+id/textInputLayout" android:layout_marginEnd="28dp"
+            android:layout_marginEnd="28dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="80dp"
     />
-    <com.google.android.material.textfield.TextInputLayout
+    <LinearLayout
             android:layout_width="308dp"
             android:layout_height="48dp"
-            android:id="@+id/textInputLayout"
-            app:hintEnabled="false"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="80dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="27dp"
-            app:layout_constraintEnd_toStartOf="@+id/searchButton"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="80dp">
+            app:layout_constraintEnd_toStartOf="@+id/searchButton">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/search_text"
-                android:paddingTop="22dp"
-                android:paddingBottom="5dp"
-                android:imeOptions="actionDone"
-                android:singleLine="true" android:id="@+id/searchBar" android:textSize="20sp"/>
-    </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="match_parent"
+                android:hint="@string/search_text" android:id="@+id/searchBar" android:layout_weight="1"
+                android:background="@color/material_dynamic_neutral95" android:paddingLeft="10dp"/>
+        <ImageView
+                android:layout_width="30dp"
+                android:layout_height="48dp" app:srcCompat="@drawable/marker" android:id="@+id/setCurrentLocationMarker"
+                android:layout_alignRight="@id/searchBar" android:background="@color/material_dynamic_neutral95"/>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
