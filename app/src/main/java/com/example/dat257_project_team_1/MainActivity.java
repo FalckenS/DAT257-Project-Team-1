@@ -1,5 +1,6 @@
 package com.example.dat257_project_team_1;
 
+import android.location.Location;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResult;
@@ -214,9 +215,15 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
 
     private void showCards(int numOfCardsToShow) {
         for (int i = 0; i < numOfCardsToShow; i++) {
+            if (!(i < cardList.size())) {
+                break;
+            }
             cardList.get(i).setVisibility(View.VISIBLE);
         }
         for (int i = numOfCardsToShow; i < 10; i++) {
+            if (!(i < cardList.size())) {
+                break;
+            }
             cardList.get(i).setVisibility(View.GONE);
         }
     }
@@ -236,10 +243,12 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         }
         showCards(recyclingCenters.size());
         for (int i = 0; i < recyclingCenters.size(); i++) {
-            if (i < locationNameList.size() && i < cardAddressList.size()){
-                locationNameList.get(i).setText(recyclingCenters.get(i).getName());
-                cardAddressList.get(i).setText(recyclingCenters.get(i).getAddress());
+            if (!(i < locationNameList.size() && i < cardAddressList.size())) {
+                break;
             }
+            RecyclingCenter recyclingCenter = recyclingCenters.get(i);
+            locationNameList.get(i).setText(recyclingCenter.getName());
+            cardAddressList.get(i).setText(recyclingCenter.getAddress());
         }
     }
 }

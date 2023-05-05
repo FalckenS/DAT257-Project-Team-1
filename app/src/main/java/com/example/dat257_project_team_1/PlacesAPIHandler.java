@@ -2,6 +2,7 @@ package com.example.dat257_project_team_1;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Objects;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,15 +16,15 @@ import static com.example.dat257_project_team_1.Constants.*;
 
 class PlacesAPIHandler {
 
-    static public void updateRecyclingCenters(Location location, IRecyclingCentersObserver recyclingCentersObserver) {
+    static public void updateRecyclingCenters(Location currentLocation, IRecyclingCentersObserver recyclingCentersObserver) {
         // https://developers.google.com/maps/documentation/places/web-service/search-nearby
-        String placesAPIUrl = constructPlacesAPIUrl(location);
+        String placesAPIUrl = constructPlacesAPIUrl(currentLocation);
         Request request = new Request.Builder()
                 .url(placesAPIUrl)
                 .method("GET", null)
                 .build();
         try {
-            executeRequest(request, recyclingCentersObserver);
+            executeRequest(request, recyclingCentersObserver, currentLocation);
         }
         catch (Exception e)
         {
@@ -32,12 +33,12 @@ class PlacesAPIHandler {
         }
     }
 
-    static private void executeRequest(Request request, IRecyclingCentersObserver recyclingCentersObserver) {
+    static private void executeRequest(Request request, IRecyclingCentersObserver recyclingCentersObserver, Location currentLocation) {
         Handler handler = new Handler(Looper.getMainLooper());
         new Thread(() -> {
             try {
                 OkHttpClient okHttpClient = new OkHttpClient().newBuilder().build();
-                ArrayList<RecyclingCenter> recyclingCenters = getResults(okHttpClient.newCall(request).execute());
+                ArrayList<RecyclingCenter> recyclingCenters = getResults(okHttpClient.newCall(request).execute(), currentLocation);
                 recyclingCentersObserver.saveNewRecyclingCenters(recyclingCenters);
             }
             catch (IOException | JSONException e) {
@@ -47,7 +48,7 @@ class PlacesAPIHandler {
         }).start();
     }
 
-    static private ArrayList<RecyclingCenter> getResults(Response response) throws IOException, JSONException {
+    static private ArrayList<RecyclingCenter> getResults(Response response, Location currentLocation) throws IOException, JSONException {
         ArrayList<RecyclingCenter> recyclingCenters = new ArrayList<>();
         assert response.body() != null;
         String responseJsonString = response.body().string();
@@ -57,31 +58,39 @@ class PlacesAPIHandler {
         for (int i = 0; i < results.length(); i++) {
             JSONObject recyclingCenterJsonObject = results.getJSONObject(i);
 
-            String address = recyclingCenterJsonObject.getString("vicinity");
-            if (!recyclingCenters.isEmpty()) {
-                if (Objects.equals(recyclingCenters.get(recyclingCenters.size()-1).getAddress(), address)) {
-                    // Sometimes the same recycling center shows up several times. If this is the case, skip to the next one
-                    continue;
-                }
-            }
             recyclingCenters.add(new RecyclingCenter(
                     recyclingCenterJsonObject.getString("name"),
-                    address,
+                    recyclingCenterJsonObject.getString("vicinity"),
                     LocationFactory.createLocation(
                             recyclingCenterJsonObject.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
                             recyclingCenterJsonObject.getJSONObject("geometry").getJSONObject("location").getDouble("lng"))));
-            if (recyclingCenters.size() == 10) {
-                break;
-            }
         }
+
+        /*for (RecyclingCenter recyclingCenter : recyclingCenters) {
+            System.out.println(CurrentLocationHelper.calculateDistance(currentLocation, recyclingCenter.getLocation()));
+        }
+
+        recyclingCenters.sort((recyclingCenter1, recyclingCenter2) -> {
+            double distance1 = CurrentLocationHelper.calculateDistance(recyclingCenter1.getLocation(), currentLocation);
+            double distance2 = CurrentLocationHelper.calculateDistance(recyclingCenter2.getLocation(), currentLocation);
+            return Double.compare(distance1, distance2);
+        });
+
+        System.out.println("-----------------------");
+
+        for (RecyclingCenter recyclingCenter : recyclingCenters) {
+            System.out.println(CurrentLocationHelper.calculateDistance(currentLocation, recyclingCenter.getLocation()));
+        }*/
+
         return recyclingCenters;
     }
+
 
     static private String constructPlacesAPIUrl(Location currentLocation) {
         String latitude     = String.valueOf(currentLocation.getLatitude());
         String longitude    = String.valueOf(currentLocation.getLongitude());
         String location     = latitude + "%2C" + longitude;
-        String keyword      = "Recycling center";
+        String keyword      = "recycling center";
         String opennow      = "true";
         String rankby       = "distance";
         return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +

@@ -4,11 +4,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.widget.SearchView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
@@ -16,7 +19,7 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
 
     private MapView mapView;
     private SearchView mapSearch;
-
+    private GoogleMap googleMap;
     private ArrayList<RecyclingCenter> recyclingCenters;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,18 +33,26 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
 
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(googleMap -> {
-            googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-            googleMap.setBuildingsEnabled(false);
-            googleMap.setTrafficEnabled(true);
-            googleMap.stopAnimation();
-            if (    ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                CurrentLocationHelper.requestLocationPermission(this);
-                if (!CurrentLocationHelper.isLocationPermissionGranted(this)) {
-                    return;
-                }
+            this.googleMap = googleMap;
+            googleMapInit();
+        });
+    }
+
+    private void googleMapInit() {
+        if (    ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            CurrentLocationHelper.requestLocationPermission(this);
+            if (!CurrentLocationHelper.isLocationPermissionGranted(this)) {
+                return;
             }
-            googleMap.setMyLocationEnabled(true);
+        }
+        googleMap.setMyLocationEnabled(true);
+        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        googleMap.setBuildingsEnabled(false);
+        googleMap.setTrafficEnabled(true);
+        CurrentLocationHelper.accessCurrentLocation(this, currentLocation -> {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 10));
+            PlacesAPIHandler.updateRecyclingCenters(currentLocation, this);
         });
     }
 
@@ -88,6 +99,16 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
 
     @Override
     public void updateRecyclingCenters() {
-        // TODO
+        if (googleMap != null) {
+            for(RecyclingCenter recyclingCenter : recyclingCenters) {
+                Location location = recyclingCenter.getLocation();
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(new LatLng(location.getLatitude(), location.getLongitude()))
+                        .title(recyclingCenter.getName())
+                        .snippet("Address: " + recyclingCenter.getAddress());
+                googleMap.addMarker(markerOptions);
+                System.out.println(recyclingCenter.getAddress());
+            }
+        }
     }
 }

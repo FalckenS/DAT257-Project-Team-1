@@ -1,5 +1,6 @@
 package com.example.dat257_project_team_1;
 
+import android.location.Location;
 import org.jetbrains.annotations.NotNull;
 import android.Manifest;
 import android.app.Activity;
@@ -36,6 +37,21 @@ class CurrentLocationHelper {
                     }
                 },
                 Looper.getMainLooper());
+    }
+
+    static double calculateDistance(Location location1, Location location2) {
+        double endLat = location1.getLatitude();
+        double endLng = location1.getLongitude();
+        double startLat = location2.getLatitude();
+        double startLng = location2.getLongitude();
+
+        double dLat = Math.toRadians(endLat - startLat);
+        double dLng = Math.toRadians(endLng - startLng);
+
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(Math.toRadians(startLat)) * Math.cos(Math.toRadians(endLat)) * Math.sin(dLng/2) * Math.sin(dLng/2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return 6371 * c;
     }
 
     static boolean isLocationPermissionGranted(Activity activity) {
