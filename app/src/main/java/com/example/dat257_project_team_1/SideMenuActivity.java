@@ -15,8 +15,9 @@ public class SideMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.side_menu);
-        ImageView closeSideMenu = (ImageView) findViewById(R.id.closeSideMenu);
+        ImageView closeSideMenu = (ImageView) findViewById(R.id.closeLogin);
         Button settingsButton = (Button) findViewById(R.id.Settings_button);
+        Button logIn = (Button) findViewById(R.id.logIn);
 
         closeSideMenu.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -34,10 +35,21 @@ public class SideMenuActivity extends AppCompatActivity {
             }
 
         });
+        logIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openLogin();
+            }
+
+        });
     }
 
     private void openSettingsMenu(){
         Intent intent = new Intent(this, SettingsMenu.class);
+        startActivity(intent);
+    }
+    private void openLogin(){
+        Intent intent = new Intent(this, LoginMenu.class);
         startActivity(intent);
     }
 }

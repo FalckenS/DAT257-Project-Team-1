@@ -8,4 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="search_button_color">#555B6E</color>
+    <color name="greenModecolorPrimary">#4B5A1A</color>
+    <color name="greenModeColorPrimaryVariant">#243010</color>
+    <color name="greenModeSecondary">#CAD593</color>
+    <color name="greenModeSecondaryVariant">#8A9164</color>
+    <color name="greenBackgroundColor">#A5E1A5</color>
 </resources>

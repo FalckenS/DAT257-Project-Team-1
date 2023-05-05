@@ -15,7 +15,7 @@ xmlns:tools="http://schemas.android.com/tools"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
     android:supportsRtl="true"
-    android:theme="@style/Theme.DAT257ProjectTeam1.NoActionBar"
+    android:theme="@style/Theme.LightMode.NoActionBar"
     >
         <service
                 android:name="MainActivity"
@@ -44,9 +44,13 @@ xmlns:tools="http://schemas.android.com/tools"
             android:exported="false"
             android:parentActivityName=".MainActivity"/>
         <activity
+            android:name=".LoginMenu"
+            android:exported="false"
+            android:parentActivityName=".SideMenu"/>
+        <activity
                 android:name=".SettingsMenu"
                 android:exported="false"
-                android:parentActivityName=".MainActivity"/>
+                android:parentActivityName=".SideMenu"/>
         <activity
             android:name=".MapViewActivity"
             android:exported="false"

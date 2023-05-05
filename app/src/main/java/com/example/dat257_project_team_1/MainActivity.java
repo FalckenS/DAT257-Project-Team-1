@@ -1,6 +1,8 @@
 package com.example.dat257_project_team_1;
 
 import android.location.Location;
+import android.location.Location;
+import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResult;
@@ -24,12 +26,15 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.dat257_project_team_1.Constants.*;
 
 public class MainActivity extends AppCompatActivity implements IRecyclingCentersObserver {
 
-    private TextInputEditText searchBar;
+    private PlacesAPIHandler placesAPIHandler;
+    private CurrentLocationHandler currentLocationHandler;
+    private EditText searchBar;
     private Intent autoCompleteIntent;
 
     private boolean cardsExist;
@@ -72,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
                 if (result.getResultCode() == RESULT_OK){
                     Place place = Autocomplete.getPlaceFromIntent(result.getData());
                     searchBar.setText(place.getAddress());
+                    Location searchBarLocation = buildLocationObject(Objects.requireNonNull(place.getLatLng()).latitude, place.getLatLng().longitude);
+                    placesAPIHandler.updateRecyclingCenters(searchBarLocation);
                 } else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR){
                     // Todo: handle error
                 } else if (result.getResultCode() == RESULT_CANCELED){
@@ -112,16 +119,29 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
             }
         });
 
-        if (CurrentLocationHelper.isLocationPermissionGranted(this)) {
-            CurrentLocationHelper.accessCurrentLocation(this, currentLocation -> PlacesAPIHandler.updateRecyclingCenters(currentLocation, this));
-            /*
-            currentLocationHandler.accessCurrentLocation(this, new ICurrentLocationTask() {
-                @Override
-                public void currentLocationTask(Location currentLocation) {
-                    placesAPIHandler.updateRecyclingCenters(currentLocation);
+        ImageView setCurrentLocationMarker = findViewById(R.id.setCurrentLocationMarker);
+        setCurrentLocationMarker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentLocationHandler.isLocationPermissionGranted()) {
+                    searchBar.setText("Current location");
+                    currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
                 }
-            });
-            */
+            }
+        });
+
+        if (currentLocationHandler.isLocationPermissionGranted()) {
+            currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
+        }
+    }
+
+    /*------------------------------------------------- Non-private -------------------------------------------------*/
+
+    void populateCards() {
+        ArrayList<RecyclingCenter> recyclingCenters = placesAPIHandler.getRecyclingCenters();
+        if (!cardsExist) {
+            scrollView.setVisibility(View.VISIBLE);
+            cardsExist = true;
         }
     }
 
@@ -130,6 +150,14 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
     private void autoCompleteIntentBuilder(){
         List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
         autoCompleteIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountry("se").build(this);
+    }
+
+    private Location buildLocationObject(double latitude, double longitude){
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+
+        return location;
     }
 
     private void openMap(){
