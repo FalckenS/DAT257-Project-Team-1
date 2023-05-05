@@ -32,8 +32,6 @@ import static com.example.dat257_project_team_1.Constants.*;
 
 public class MainActivity extends AppCompatActivity implements IRecyclingCentersObserver {
 
-    private PlacesAPIHandler placesAPIHandler;
-    private CurrentLocationHandler currentLocationHandler;
     private EditText searchBar;
     private Intent autoCompleteIntent;
 
@@ -71,22 +69,6 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         scrollView.setVisibility(View.GONE);
         initializeCards();
 
-        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if (result.getResultCode() == RESULT_OK){
-                    Place place = Autocomplete.getPlaceFromIntent(result.getData());
-                    searchBar.setText(place.getAddress());
-                    Location searchBarLocation = buildLocationObject(Objects.requireNonNull(place.getLatLng()).latitude, place.getLatLng().longitude);
-                    placesAPIHandler.updateRecyclingCenters(searchBarLocation);
-                } else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR){
-                    // Todo: handle error
-                } else if (result.getResultCode() == RESULT_CANCELED){
-                    // user canceled the operation
-                }
-            }
-        });
-
         autoCompleteIntentBuilder();
         ImageView maps = (ImageView) findViewById(R.id.maps);
         ImageView sideMenu = (ImageView) findViewById(R.id.sideMenu);
@@ -99,6 +81,24 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         sideMenu.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                       openSideMenu();
+            }
+        });
+
+        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK){
+                    Place place = Autocomplete.getPlaceFromIntent(result.getData());
+                    searchBar.setText(place.getAddress());
+                    Location searchBarLocation = buildLocationObject(Objects.requireNonNull(place.getLatLng()).latitude, place.getLatLng().longitude);
+                    PlacesAPIHandler.updateRecyclingCenters(searchBarLocation, MainActivity.this);
+                }
+                else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR){
+                    // Todo: handle error
+                }
+                else if (result.getResultCode() == RESULT_CANCELED){
+                    // user canceled the operation
+                }
             }
         });
         searchBar = findViewById(R.id.searchBar);
@@ -123,25 +123,15 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         setCurrentLocationMarker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (currentLocationHandler.isLocationPermissionGranted()) {
+                if (CurrentLocationHelper.isLocationPermissionGranted(MainActivity.this)) {
                     searchBar.setText("Current location");
-                    currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
+                    CurrentLocationHelper.accessCurrentLocation(MainActivity.this, currentLocation -> PlacesAPIHandler.updateRecyclingCenters(currentLocation, MainActivity.this));
                 }
             }
         });
 
-        if (currentLocationHandler.isLocationPermissionGranted()) {
-            currentLocationHandler.accessCurrentLocation(currentLocation -> placesAPIHandler.updateRecyclingCenters(currentLocation));
-        }
-    }
-
-    /*------------------------------------------------- Non-private -------------------------------------------------*/
-
-    void populateCards() {
-        ArrayList<RecyclingCenter> recyclingCenters = placesAPIHandler.getRecyclingCenters();
-        if (!cardsExist) {
-            scrollView.setVisibility(View.VISIBLE);
-            cardsExist = true;
+        if (CurrentLocationHelper.isLocationPermissionGranted(this)) {
+            CurrentLocationHelper.accessCurrentLocation(this, currentLocation -> PlacesAPIHandler.updateRecyclingCenters(currentLocation, this));
         }
     }
 
