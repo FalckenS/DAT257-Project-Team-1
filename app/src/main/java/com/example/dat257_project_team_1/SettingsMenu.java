@@ -2,6 +2,7 @@ package com.example.dat257_project_team_1;
 
 import android.app.Application;
 import android.content.ContextWrapper;
+import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -25,6 +26,7 @@ public class SettingsMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 System.out.println("Click");
+                
             }
         });
     }
