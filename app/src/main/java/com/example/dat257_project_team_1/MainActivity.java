@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
