@@ -6,29 +6,24 @@
     android:layout_height="match_parent">
 
     <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="410dp"
-        android:layout_height="732dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="488dp"
-        android:layout_height="805dp"
-        app:srcCompat="@drawable/map"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="-37dp" />
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@android:string/fingerprint_icon_content_description"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+    />
 
     <SearchView
-        android:id="@+id/mapSearch"
-        android:layout_width="303dp"
-        android:layout_height="69dp"
-        android:layout_marginTop="24dp"
-        android:background="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/mapView" />
+            android:id="@+id/mapSearch"
+            android:layout_width="303dp"
+            android:layout_height="69dp"
+            android:layout_marginTop="24dp"
+            android:background="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/mapView"
+    />
 </androidx.constraintlayout.widget.ConstraintLayout>

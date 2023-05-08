@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-public class SideMenu extends AppCompatActivity {
+public class SideMenuActivity extends AppCompatActivity {
 
 
     @Override

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -40,20 +37,24 @@ xmlns:tools="http://schemas.android.com/tools"
             </intent-filter>
         </activity>
         <activity
-            android:name=".SideMenu"
+            android:name=".SideMenuActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity"
+        />
         <activity
             android:name=".LoginMenu"
             android:exported="false"
-            android:parentActivityName=".SideMenu"/>
+            android:parentActivityName=".SideMenuActivity"
+        />
         <activity
-                android:name=".SettingsMenu"
-                android:exported="false"
-                android:parentActivityName=".SideMenu"/>
-        <activity
-            android:name=".MapViewAct"
+            android:name=".SettingsMenu"
             android:exported="false"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".SideMenuActivity"
+        />
+        <activity
+            android:name=".MapViewActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"
+        />
     </application>
 </manifest>
