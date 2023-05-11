@@ -4,7 +4,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <androidx.cardview.widget.CardView
-            android:onClick="expand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -24,8 +23,7 @@
                     android:layout_height="wrap_content"
                     android:text="insert_location_name_here"
                     android:textSize="32sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/purple_500">
+                    android:textStyle="bold">
             </TextView>
             <TextView
                     android:id="@+id/cardAddress"
