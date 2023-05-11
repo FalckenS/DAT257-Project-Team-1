@@ -161,6 +161,7 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
 
     @Override
     public void updateRecyclingCenters() {
+        googleMap.clear();
         if (googleMap != null) {
             for(RecyclingCenter recyclingCenter : recyclingCenters) {
                 Location location = recyclingCenter.getLocation();
