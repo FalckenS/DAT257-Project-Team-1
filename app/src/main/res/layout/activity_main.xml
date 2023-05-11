@@ -374,7 +374,7 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/icons8_map_64" />
+        app:srcCompat="@drawable/map" />
 
     <ImageView
         android:id="@+id/sideMenu"

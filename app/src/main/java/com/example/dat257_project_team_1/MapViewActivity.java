@@ -24,32 +24,40 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
         setContentView(R.layout.map_view);
 
         recyclingCenters = new ArrayList<>();
-
         mapView = findViewById(R.id.mapView);
         mapSearch = findViewById(R.id.mapSearch);
+
+        Location locationToSearchFrom = getIntent().getParcelableExtra("locationToSearchFrom", Location.class);
+        boolean focusOnRecyclingCenter = getIntent().getBooleanExtra("focusOnRecyclingCenter", false);
+        Location locationOfRecyclingCenter;
+        if (focusOnRecyclingCenter) {
+            locationOfRecyclingCenter = getIntent().getParcelableExtra("locationOfRecyclingCenter", Location.class);
+        }
+        else {
+            locationOfRecyclingCenter = null;
+        }
 
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(googleMap -> {
             this.googleMap = googleMap;
-            googleMapInit();
-        });
-    }
-
-    private void googleMapInit() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            CurrentLocationHandler.requestLocationPermission(this);
-            if (!CurrentLocationHandler.isLocationPermissionGranted(this)) {
-                return;
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                CurrentLocationHandler.requestLocationPermission(this);
+                if (!CurrentLocationHandler.isLocationPermissionGranted(this)) {
+                    return;
+                }
             }
-        }
-        googleMap.setMyLocationEnabled(true);
-        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        googleMap.setBuildingsEnabled(false);
-        googleMap.setTrafficEnabled(true);
-        CurrentLocationHandler.accessCurrentLocation(this, currentLocation -> {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 10));
-            PlacesAPIHandler.updateRecyclingCenters(currentLocation, this);
+            googleMap.setMyLocationEnabled(true);
+            googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            googleMap.setBuildingsEnabled(false);
+            googleMap.setTrafficEnabled(true);
+            PlacesAPIHandler.updateRecyclingCenters(locationToSearchFrom, this);
+
+            if (focusOnRecyclingCenter) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationOfRecyclingCenter.getLatitude(), locationOfRecyclingCenter.getLongitude()), 15));
+            }
+            else {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationToSearchFrom.getLatitude(), locationToSearchFrom.getLongitude()), 12));
+            }
         });
     }
 

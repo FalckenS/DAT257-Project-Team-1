@@ -30,10 +30,12 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
     private Intent autoCompleteIntent;
     private boolean cardsExist;
     private ArrayList<CardView> cardList;
-    private ArrayList<TextView> locationNameList;
+    private ArrayList<TextView> cardNameList;
     private ArrayList<TextView> cardAddressList;
+    private ArrayList<Location> cardLocationList;
     private ScrollView scrollView;
     private ArrayList<RecyclingCenter> recyclingCenters;
+    private Location locationSearchPoint;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -45,8 +47,9 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
 
         cardsExist = false;
         cardList = new ArrayList<>();
-        locationNameList = new ArrayList<>();
+        cardNameList = new ArrayList<>();
         cardAddressList = new ArrayList<>();
+        cardLocationList = new ArrayList<>();
 
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), API_KEY);
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         autoCompleteIntentBuilder();
         ImageView maps = findViewById(R.id.maps);
         ImageView sideMenu = findViewById(R.id.sideMenu);
-        maps.setOnClickListener(v -> openMap());
+        maps.setOnClickListener(v -> {if (locationSearchPoint != null) {openMap(locationSearchPoint);}});
         sideMenu.setOnClickListener(v -> openSideMenu());
 
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -68,8 +71,8 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
                 assert result.getData() != null;
                 Place place = Autocomplete.getPlaceFromIntent(result.getData());
                 searchBar.setText(place.getAddress());
-                Location searchBarLocation = buildLocationObject(Objects.requireNonNull(place.getLatLng()).latitude, place.getLatLng().longitude);
-                PlacesAPIHandler.updateRecyclingCenters(searchBarLocation, MainActivity.this);
+                locationSearchPoint = buildLocationObject(Objects.requireNonNull(place.getLatLng()).latitude, place.getLatLng().longitude);
+                PlacesAPIHandler.updateRecyclingCenters(locationSearchPoint, MainActivity.this);
             }
             else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR){
                 // Todo: handle error
@@ -90,16 +93,23 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         setCurrentLocationMarker.setOnClickListener(view -> {
             if (CurrentLocationHandler.isLocationPermissionGranted(MainActivity.this)) {
                 searchBar.setText("Current location");
-                CurrentLocationHandler.accessCurrentLocation(MainActivity.this, currentLocation -> PlacesAPIHandler.updateRecyclingCenters(currentLocation, MainActivity.this));
+                updateRecyclingCentersFromCurrentLocation();
             }
         });
 
         if (CurrentLocationHandler.isLocationPermissionGranted(this)) {
-            CurrentLocationHandler.accessCurrentLocation(this, currentLocation -> PlacesAPIHandler.updateRecyclingCenters(currentLocation, this));
+            updateRecyclingCentersFromCurrentLocation();
         }
     }
 
     /*--------------------------------------------------- Private ---------------------------------------------------*/
+
+    private void updateRecyclingCentersFromCurrentLocation() {
+        CurrentLocationHandler.accessCurrentLocation(MainActivity.this, currentLocation -> {
+            locationSearchPoint = currentLocation;
+            PlacesAPIHandler.updateRecyclingCenters(currentLocation, MainActivity.this);
+        });
+    }
 
     private void autoCompleteIntentBuilder(){
         List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
@@ -110,16 +120,23 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
-
         return location;
     }
 
-    private void openMap(){
-        // Code to open map view
-
+    private void openMap(Location locationToSearchFrom){
         Intent intent = new Intent(this, MapViewActivity.class);
+        intent.putExtra("focusOnRecyclingCenter", false);
+        intent.putExtra("locationToSearchFrom", locationToSearchFrom);
         startActivity(intent);
     }
+    private void openMap(Location locationToSearchFrom, Location locationOfRecyclingCenter) {
+        Intent intent = new Intent(this, MapViewActivity.class);
+        intent.putExtra("focusOnRecyclingCenter", true);
+        intent.putExtra("locationToSearchFrom", locationToSearchFrom);
+        intent.putExtra("locationOfRecyclingCenter", locationOfRecyclingCenter);
+        startActivity(intent);
+    }
+
 
     private void openSideMenu(){
         Intent intent = new Intent(this, SideMenuActivity.class);
@@ -137,6 +154,17 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         CardView card8 = findViewById(R.id.card8);
         CardView card9 = findViewById(R.id.card9);
         CardView card10 = findViewById(R.id.card10);
+
+        card1.setOnClickListener(view -> openMap(locationSearchPoint, cardLocationList.get(0)));
+        card2.setOnClickListener(view -> openMap(locationSearchPoint, cardLocationList.get(1)));
+        card3.setOnClickListener(view -> openMap(locationSearchPoint, cardLocationList.get(2)));
+        card4.setOnClickListener(view -> openMap(locationSearchPoint, cardLocationList.get(3)));
+        card5.setOnClickListener(view -> openMap(locationSearchPoint, cardLocationList.get(4)));
+        card6.setOnClickListener(view -> openMap(locationSearchPoint, cardLocationList.get(5)));
+        card7.setOnClickListener(view -> openMap(locationSearchPoint, cardLocationList.get(6)));
+        card8.setOnClickListener(view -> openMap(locationSearchPoint, cardLocationList.get(7)));
+        card9.setOnClickListener(view -> openMap(locationSearchPoint, cardLocationList.get(8)));
+        card10.setOnClickListener(view -> openMap(locationSearchPoint, cardLocationList.get(9)));
 
         cardList.add(card1);
         cardList.add(card2);
@@ -160,16 +188,16 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         TextView locationName9 = findViewById(R.id.locationName9);
         TextView locationName10 = findViewById(R.id.locationName10);
 
-        locationNameList.add(locationName1);
-        locationNameList.add(locationName2);
-        locationNameList.add(locationName3);
-        locationNameList.add(locationName4);
-        locationNameList.add(locationName5);
-        locationNameList.add(locationName6);
-        locationNameList.add(locationName7);
-        locationNameList.add(locationName8);
-        locationNameList.add(locationName9);
-        locationNameList.add(locationName10);
+        cardNameList.add(locationName1);
+        cardNameList.add(locationName2);
+        cardNameList.add(locationName3);
+        cardNameList.add(locationName4);
+        cardNameList.add(locationName5);
+        cardNameList.add(locationName6);
+        cardNameList.add(locationName7);
+        cardNameList.add(locationName8);
+        cardNameList.add(locationName9);
+        cardNameList.add(locationName10);
 
         TextView cardAddress1 = findViewById(R.id.cardAddress1);
         TextView cardAddress2 = findViewById(R.id.cardAddress2);
@@ -218,18 +246,20 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
 
     @Override
     public void updateRecyclingCenters() {
+        cardLocationList.clear();
         if (!cardsExist) {
             scrollView.setVisibility(View.VISIBLE);
             cardsExist = true;
         }
         showCards(recyclingCenters.size());
         for (int i = 0; i < recyclingCenters.size(); i++) {
-            if (!(i < locationNameList.size() && i < cardAddressList.size())) {
+            if (!(i < cardNameList.size() && i < cardAddressList.size())) {
                 break;
             }
             RecyclingCenter recyclingCenter = recyclingCenters.get(i);
-            locationNameList.get(i).setText(recyclingCenter.getName());
+            cardNameList.get(i).setText(recyclingCenter.getName());
             cardAddressList.get(i).setText(recyclingCenter.getAddress());
+            cardLocationList.add(recyclingCenter.getLocation());
         }
     }
 }
