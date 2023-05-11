@@ -1,11 +1,9 @@
 package com.example.dat257_project_team_1;
 
 import java.util.*;
-
 import android.view.View;
 import android.os.Bundle;
 import android.content.Intent;
-import android.widget.ImageView;
 import android.annotation.SuppressLint;
 import android.location.Location;
 import android.widget.EditText;
@@ -26,15 +24,15 @@ import static com.example.dat257_project_team_1.Constants.*;
 
 public class MainActivity extends AppCompatActivity implements IRecyclingCentersObserver {
 
+    private ScrollView scrollView;
     private EditText searchBar;
     private Intent autoCompleteIntent;
+    private ArrayList<RecyclingCenter> recyclingCenters;
     private boolean cardsExist;
     private ArrayList<CardView> cardList;
     private ArrayList<TextView> cardNameList;
     private ArrayList<TextView> cardAddressList;
     private ArrayList<Location> cardLocationList;
-    private ScrollView scrollView;
-    private ArrayList<RecyclingCenter> recyclingCenters;
     private Location locationSearchPoint;
 
     @SuppressLint("SetTextI18n")
@@ -44,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         setContentView(R.layout.activity_main);
 
         recyclingCenters = new ArrayList<>();
-
         cardsExist = false;
+
         cardList = new ArrayList<>();
         cardNameList = new ArrayList<>();
         cardAddressList = new ArrayList<>();
@@ -56,15 +54,13 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         }
 
         scrollView = findViewById(R.id.rv_list);
-
         scrollView.setVisibility(View.GONE);
         initializeCards();
 
+        findViewById(R.id.maps).setOnClickListener(v -> {if (locationSearchPoint != null) {openMap(locationSearchPoint);}});
+        findViewById(R.id.sideMenu).setOnClickListener(v -> openSideMenu());
+
         autoCompleteIntentBuilder();
-        ImageView maps = findViewById(R.id.maps);
-        ImageView sideMenu = findViewById(R.id.sideMenu);
-        maps.setOnClickListener(v -> {if (locationSearchPoint != null) {openMap(locationSearchPoint);}});
-        sideMenu.setOnClickListener(v -> openSideMenu());
 
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK){
@@ -72,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
                 Place place = Autocomplete.getPlaceFromIntent(result.getData());
                 searchBar.setText(place.getAddress());
                 locationSearchPoint = buildLocationObject(Objects.requireNonNull(place.getLatLng()).latitude, place.getLatLng().longitude);
-                PlacesAPIHandler.updateRecyclingCenters(locationSearchPoint, MainActivity.this);
+                PlacesAPIHandler.updateRecyclingCenters(locationSearchPoint, this);
             }
             else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR){
                 // Todo: handle error
@@ -81,17 +77,18 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
                 // user canceled the operation
             }
         });
+
         searchBar = findViewById(R.id.searchBar);
         searchBar.setFocusable(false);
         // Placeholder search bar text field event listener
         searchBar.setOnClickListener(view -> activityResultLauncher.launch(autoCompleteIntent));
+
         AppCompatButton searchButton = findViewById(R.id.searchButton);
         // Placeholder search button event listener
         searchButton.setOnClickListener(view -> activityResultLauncher.launch(autoCompleteIntent));
 
-        ImageView setCurrentLocationMarker = findViewById(R.id.setCurrentLocationMarker);
-        setCurrentLocationMarker.setOnClickListener(view -> {
-            if (CurrentLocationHandler.isLocationPermissionGranted(MainActivity.this)) {
+        findViewById(R.id.setCurrentLocationMarker).setOnClickListener(view -> {
+            if (CurrentLocationHandler.isLocationPermissionGranted(this)) {
                 searchBar.setText("Current location");
                 updateRecyclingCentersFromCurrentLocation();
             }
@@ -103,45 +100,6 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
     }
 
     /*--------------------------------------------------- Private ---------------------------------------------------*/
-
-    private void updateRecyclingCentersFromCurrentLocation() {
-        CurrentLocationHandler.accessCurrentLocation(MainActivity.this, currentLocation -> {
-            locationSearchPoint = currentLocation;
-            PlacesAPIHandler.updateRecyclingCenters(currentLocation, MainActivity.this);
-        });
-    }
-
-    private void autoCompleteIntentBuilder(){
-        List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
-        autoCompleteIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountries(Collections.singletonList("se")).build(this);
-    }
-
-    private Location buildLocationObject(double latitude, double longitude){
-        Location location = new Location("");
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
-        return location;
-    }
-
-    private void openMap(Location locationToSearchFrom){
-        Intent intent = new Intent(this, MapViewActivity.class);
-        intent.putExtra("focusOnRecyclingCenter", false);
-        intent.putExtra("locationToSearchFrom", locationToSearchFrom);
-        startActivity(intent);
-    }
-    private void openMap(Location locationToSearchFrom, Location locationOfRecyclingCenter) {
-        Intent intent = new Intent(this, MapViewActivity.class);
-        intent.putExtra("focusOnRecyclingCenter", true);
-        intent.putExtra("locationToSearchFrom", locationToSearchFrom);
-        intent.putExtra("locationOfRecyclingCenter", locationOfRecyclingCenter);
-        startActivity(intent);
-    }
-
-
-    private void openSideMenu(){
-        Intent intent = new Intent(this, SideMenuActivity.class);
-        startActivity(intent);
-    }
 
     private void initializeCards() {
         CardView card1 = findViewById(R.id.card1);
@@ -220,6 +178,45 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         cardAddressList.add(cardAddress8);
         cardAddressList.add(cardAddress9);
         cardAddressList.add(cardAddress10);
+    }
+
+    private void openMap(Location locationToSearchFrom){
+        Intent intent = new Intent(this, MapViewActivity.class);
+        intent.putExtra("focusOnRecyclingCenter", false);
+        intent.putExtra("locationToSearchFrom", locationToSearchFrom);
+        startActivity(intent);
+    }
+
+    private void openMap(Location locationToSearchFrom, Location locationOfRecyclingCenter) {
+        Intent intent = new Intent(this, MapViewActivity.class);
+        intent.putExtra("focusOnRecyclingCenter", true);
+        intent.putExtra("locationToSearchFrom", locationToSearchFrom);
+        intent.putExtra("locationOfRecyclingCenter", locationOfRecyclingCenter);
+        startActivity(intent);
+    }
+
+    private void openSideMenu(){
+        Intent intent = new Intent(this, SideMenuActivity.class);
+        startActivity(intent);
+    }
+
+    private void autoCompleteIntentBuilder(){
+        List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
+        autoCompleteIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountries(Collections.singletonList("se")).build(this);
+    }
+
+    private Location buildLocationObject(double latitude, double longitude){
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        return location;
+    }
+
+    private void updateRecyclingCentersFromCurrentLocation() {
+        CurrentLocationHandler.accessCurrentLocation(this, currentLocation -> {
+            locationSearchPoint = currentLocation;
+            PlacesAPIHandler.updateRecyclingCenters(currentLocation, this);
+        });
     }
 
     private void showCards(int numOfCardsToShow) {

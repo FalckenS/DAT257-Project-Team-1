@@ -1,15 +1,13 @@
 package com.example.dat257_project_team_1;
 
 import java.util.*;
-
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,36 +24,17 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
 
     private MapView mapView;
     private EditText mapSearch;
+    private Intent autoCompleteIntent;
     private GoogleMap googleMap;
     private ArrayList<RecyclingCenter> recyclingCenters;
-    private Intent autoCompleteIntent;
 
+    @SuppressLint("SetTextI18n")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_view);
 
         recyclingCenters = new ArrayList<>();
-        mapView = findViewById(R.id.mapView);
-        mapSearch = findViewById(R.id.mapSearch);
-        ImageView mapSetCurrentLocationMarker = findViewById(R.id.mapSetCurrentLocationMarker);
         autoCompleteIntentBuilder();
-
-        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == RESULT_OK){
-                assert result.getData() != null;
-                Place place = Autocomplete.getPlaceFromIntent(result.getData());
-                mapSearch.setText(place.getAddress());
-                Location searchBarLocation = buildLocationObject(Objects.requireNonNull(place.getLatLng()).latitude, place.getLatLng().longitude);
-                PlacesAPIHandler.updateRecyclingCenters(searchBarLocation, MapViewActivity.this);
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 10));
-            }
-            else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR){
-                // Todo: handle error
-            }
-            else if (result.getResultCode() == RESULT_CANCELED){
-                // user canceled the operation
-            }
-        });
 
         Location locationToSearchFrom = getIntent().getParcelableExtra("locationToSearchFrom", Location.class);
         boolean focusOnRecyclingCenter = getIntent().getBooleanExtra("focusOnRecyclingCenter", false);
@@ -67,6 +46,7 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
             locationOfRecyclingCenter = null;
         }
 
+        mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(googleMap -> {
             this.googleMap = googleMap;
@@ -90,10 +70,27 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
             }
         });
 
+        mapSearch = findViewById(R.id.mapSearch);
+        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK){
+                assert result.getData() != null;
+                Place place = Autocomplete.getPlaceFromIntent(result.getData());
+                mapSearch.setText(place.getAddress());
+                Location searchBarLocation = buildLocationObject(Objects.requireNonNull(place.getLatLng()).latitude, place.getLatLng().longitude);
+                PlacesAPIHandler.updateRecyclingCenters(searchBarLocation, MapViewActivity.this);
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 10));
+            }
+            else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR){
+                // Todo: handle error
+            }
+            else if (result.getResultCode() == RESULT_CANCELED){
+                // user canceled the operation
+            }
+        });
         mapSearch.setFocusable(false);
         mapSearch.setOnClickListener(view -> activityResultLauncher.launch(autoCompleteIntent));
 
-        mapSetCurrentLocationMarker.setOnClickListener(view -> {
+        findViewById(R.id.mapSetCurrentLocationMarker).setOnClickListener(view -> {
             if (CurrentLocationHandler.isLocationPermissionGranted(this)) {
                 mapSearch.setText("Current location");
                 CurrentLocationHandler.accessCurrentLocation(this, currentLocation -> {
@@ -103,6 +100,23 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
             }
         });
     }
+
+    /*--------------------------------------------------- Private ---------------------------------------------------*/
+
+    private void autoCompleteIntentBuilder(){
+        List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
+        autoCompleteIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountries(Collections.singletonList("se")).build(this);
+    }
+
+    private Location buildLocationObject(double latitude, double longitude){
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+
+        return location;
+    }
+
+    /*--------------------------------------------------- Other ---------------------------------------------------*/
 
     @Override
     public void onResume() {
@@ -158,18 +172,5 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
                 System.out.println(recyclingCenter.getAddress());
             }
         }
-    }
-
-    private void autoCompleteIntentBuilder(){
-        List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
-        autoCompleteIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountries(Collections.singletonList("se")).build(this);
-    }
-
-    private Location buildLocationObject(double latitude, double longitude){
-        Location location = new Location("");
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
-
-        return location;
     }
 }
