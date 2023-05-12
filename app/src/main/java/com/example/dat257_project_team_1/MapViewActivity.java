@@ -1,15 +1,13 @@
 package com.example.dat257_project_team_1;
 
 import java.util.*;
-
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,21 +24,53 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
 
     private MapView mapView;
     private EditText mapSearch;
+    private Intent autoCompleteIntent;
     private GoogleMap googleMap;
     private ArrayList<RecyclingCenter> recyclingCenters;
-    private Intent autoCompleteIntent;
 
+    @SuppressLint("SetTextI18n")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_view);
 
         recyclingCenters = new ArrayList<>();
-
-        mapView = findViewById(R.id.mapView);
-        mapSearch = findViewById(R.id.mapSearch);
-        ImageView mapSetCurrentLocationMarker = findViewById(R.id.mapSetCurrentLocationMarker);
         autoCompleteIntentBuilder();
 
+        Location locationToSearchFrom = getIntent().getParcelableExtra("locationToSearchFrom", Location.class);
+        boolean focusOnRecyclingCenter = getIntent().getBooleanExtra("focusOnRecyclingCenter", false);
+        Location locationOfRecyclingCenter;
+        if (focusOnRecyclingCenter) {
+            locationOfRecyclingCenter = getIntent().getParcelableExtra("locationOfRecyclingCenter", Location.class);
+        }
+        else {
+            locationOfRecyclingCenter = null;
+        }
+
+        mapView = findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(googleMap -> {
+            this.googleMap = googleMap;
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                CurrentLocationHandler.requestLocationPermission(this);
+                if (!CurrentLocationHandler.isLocationPermissionGranted(this)) {
+                    return;
+                }
+            }
+            googleMap.setMyLocationEnabled(true);
+            googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            googleMap.setBuildingsEnabled(false);
+            googleMap.setTrafficEnabled(true);
+            PlacesAPIHandler.updateRecyclingCenters(locationToSearchFrom, this);
+
+            if (focusOnRecyclingCenter) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationOfRecyclingCenter.getLatitude(), locationOfRecyclingCenter.getLongitude()), 15));
+            }
+            else {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationToSearchFrom.getLatitude(), locationToSearchFrom.getLongitude()), 12));
+            }
+        });
+
+        mapSearch = findViewById(R.id.mapSearch);
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK){
                 assert result.getData() != null;
@@ -57,17 +87,10 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
                 // user canceled the operation
             }
         });
-
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(googleMap -> {
-            this.googleMap = googleMap;
-            googleMapInit();
-        });
-
         mapSearch.setFocusable(false);
         mapSearch.setOnClickListener(view -> activityResultLauncher.launch(autoCompleteIntent));
 
-        mapSetCurrentLocationMarker.setOnClickListener(view -> {
+        findViewById(R.id.mapSetCurrentLocationMarker).setOnClickListener(view -> {
             if (CurrentLocationHandler.isLocationPermissionGranted(this)) {
                 mapSearch.setText("Current location");
                 CurrentLocationHandler.accessCurrentLocation(this, currentLocation -> {
@@ -78,23 +101,22 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
         });
     }
 
-    private void googleMapInit() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            CurrentLocationHandler.requestLocationPermission(this);
-            if (!CurrentLocationHandler.isLocationPermissionGranted(this)) {
-                return;
-            }
-        }
-        googleMap.setMyLocationEnabled(true);
-        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        googleMap.setBuildingsEnabled(false);
-        googleMap.setTrafficEnabled(true);
-        CurrentLocationHandler.accessCurrentLocation(this, currentLocation -> {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 10));
-            PlacesAPIHandler.updateRecyclingCenters(currentLocation, this);
-        });
+    /*--------------------------------------------------- Private ---------------------------------------------------*/
+
+    private void autoCompleteIntentBuilder(){
+        List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
+        autoCompleteIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountries(Collections.singletonList("se")).build(this);
     }
+
+    private Location buildLocationObject(double latitude, double longitude){
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+
+        return location;
+    }
+
+    /*--------------------------------------------------- Other ---------------------------------------------------*/
 
     @Override
     public void onResume() {
@@ -139,6 +161,7 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
 
     @Override
     public void updateRecyclingCenters() {
+        googleMap.clear();
         if (googleMap != null) {
             for(RecyclingCenter recyclingCenter : recyclingCenters) {
                 Location location = recyclingCenter.getLocation();
@@ -150,18 +173,5 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
                 System.out.println(recyclingCenter.getAddress());
             }
         }
-    }
-
-    private void autoCompleteIntentBuilder(){
-        List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
-        autoCompleteIntent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountries(Collections.singletonList("se")).build(this);
-    }
-
-    private Location buildLocationObject(double latitude, double longitude){
-        Location location = new Location("");
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
-
-        return location;
     }
 }
