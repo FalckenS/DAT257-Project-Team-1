@@ -371,7 +371,7 @@
             android:layout_height="48dp" android:id="@+id/searchButton"
             app:icon="@android:drawable/ic_menu_search"
             android:contentDescription="Submit search" app:iconGravity="textStart" app:iconPadding="0dp"
-            android:background="@color/search_button_color"
+            android:background="@drawable/search_background"
             android:foreground="@android:drawable/ic_menu_search"
             android:layout_marginEnd="28dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
