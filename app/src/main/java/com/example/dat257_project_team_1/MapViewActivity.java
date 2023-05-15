@@ -25,9 +25,8 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
 
         recyclingCenters = new ArrayList<>();
 
-        mapView = findViewById(R.id.mapView);
         mapSearch = findViewById(R.id.mapSearch);
-
+        mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(googleMap -> {
             this.googleMap = googleMap;
@@ -55,20 +54,20 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
 
     @Override
     public void onResume() {
-        super.onResume();
         mapView.onResume();
+        super.onResume();
     }
 
     @Override
     public void onStart() {
-        super.onStart();
         mapView.onStart();
+        super.onStart();
     }
 
     @Override
     public void onStop() {
-        super.onStop();
         mapView.onStop();
+        super.onStop();
     }
 
     @Override
@@ -85,8 +84,8 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
 
     @Override
     public void onLowMemory() {
-        super.onLowMemory();
         mapView.onLowMemory();
+        super.onLowMemory();
     }
 
     @Override
@@ -104,7 +103,7 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
                         .title(recyclingCenter.getName())
                         .snippet("Address: " + recyclingCenter.getAddress());
                 googleMap.addMarker(markerOptions);
-                System.out.println(recyclingCenter.getAddress());
+                //System.out.println(recyclingCenter.getAddress());
             }
         }
     }

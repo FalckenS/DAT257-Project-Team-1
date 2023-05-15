@@ -88,7 +88,7 @@ class PlacesAPIHandler {
         String latitude     = String.valueOf(currentLocation.getLatitude());
         String longitude    = String.valueOf(currentLocation.getLongitude());
         String location     = latitude + "%2C" + longitude;
-        String keyword      = "recycling center";
+        String keyword      = "Återvinningscenter";
         String opennow      = "true";
         String rankby       = "distance";
         return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
