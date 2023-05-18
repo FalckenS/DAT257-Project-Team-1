@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
             RecyclingCenter recyclingCenter = recyclingCenters.get(i);
             cardNameList.get(i).setText(recyclingCenter.getName());
             cardAddressList.get(i).setText(recyclingCenter.getAddress());
-            cardDistanceList.get(i).setText("Distance: " + decimalFormat.format(recyclingCenter.getDistance()/1000) + " km");
+            cardDistanceList.get(i).setText(decimalFormat.format(recyclingCenter.getDistance()/1000) + " km");
             cardLocationList.add(recyclingCenter.getLocation());
         }
     }
