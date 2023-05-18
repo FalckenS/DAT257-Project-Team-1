@@ -5,7 +5,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import android.os.Handler;
 import android.os.Looper;
@@ -67,23 +66,6 @@ class PlacesAPIHandler {
                    currentLocation.distanceTo(location),
                     location));
         }
-
-        /*for (RecyclingCenter recyclingCenter : recyclingCenters) {
-            System.out.println(CurrentLocationHandler.calculateDistance(currentLocation, recyclingCenter.getLocation()));
-        }
-
-        recyclingCenters.sort((recyclingCenter1, recyclingCenter2) -> {
-            double distance1 = CurrentLocationHandler.calculateDistance(recyclingCenter1.getLocation(), currentLocation);
-            double distance2 = CurrentLocationHandler.calculateDistance(recyclingCenter2.getLocation(), currentLocation);
-            return Double.compare(distance1, distance2);
-        });
-
-        System.out.println("-----------------------");
-
-        for (RecyclingCenter recyclingCenter : recyclingCenters) {
-            System.out.println(CurrentLocationHandler.calculateDistance(currentLocation, recyclingCenter.getLocation()));
-        }*/
-
         return recyclingCenters;
     }
 

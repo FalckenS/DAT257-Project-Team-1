@@ -1,7 +1,6 @@
 package com.example.dat257_project_team_1;
 
 import org.jetbrains.annotations.NotNull;
-import android.location.Location;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
