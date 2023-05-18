@@ -1,9 +1,11 @@
 package com.example.dat257_project_team_1;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import android.os.Handler;
 import android.os.Looper;
@@ -56,12 +58,14 @@ class PlacesAPIHandler {
         for (int i = 0; i < results.length(); i++) {
             JSONObject recyclingCenterJsonObject = results.getJSONObject(i);
 
+            Location location = LocationFactory.createLocation(
+                    recyclingCenterJsonObject.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
+                    recyclingCenterJsonObject.getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
             recyclingCenters.add(new RecyclingCenter(
                     recyclingCenterJsonObject.getString("name"),
                     recyclingCenterJsonObject.getString("vicinity"),
-                    LocationFactory.createLocation(
-                            recyclingCenterJsonObject.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
-                            recyclingCenterJsonObject.getJSONObject("geometry").getJSONObject("location").getDouble("lng"))));
+                   currentLocation.distanceTo(location),
+                    location));
         }
 
         /*for (RecyclingCenter recyclingCenter : recyclingCenters) {

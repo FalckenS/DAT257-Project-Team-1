@@ -38,10 +38,10 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                     <TextView
-                            android:id="@+id/locationName1"
+                            android:id="@+id/cardName1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_location_name_here"
+                            android:text="name"
                             android:textSize="32sp"
                             android:textStyle="bold">
                     </TextView>
@@ -49,9 +49,14 @@
                             android:id="@+id/cardAddress1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_adress"
+                            android:text="adress"
                             android:textSize="18sp">
                     </TextView>
+                    <TextView
+                            android:text="distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/cardDistance1"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -70,10 +75,10 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                     <TextView
-                            android:id="@+id/locationName2"
+                            android:id="@+id/cardName2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_location_name_here"
+                            android:text="name"
                             android:textSize="32sp"
                             android:textStyle="bold">
                     </TextView>
@@ -81,9 +86,14 @@
                             android:id="@+id/cardAddress2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_adress"
+                            android:text="adress"
                             android:textSize="18sp">
                     </TextView>
+                    <TextView
+                            android:text="distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/cardDistance2"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -102,10 +112,10 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                     <TextView
-                            android:id="@+id/locationName3"
+                            android:id="@+id/cardName3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_location_name_here"
+                            android:text="name"
                             android:textSize="32sp"
                             android:textStyle="bold">
                     </TextView>
@@ -113,9 +123,14 @@
                             android:id="@+id/cardAddress3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_adress"
+                            android:text="adress"
                             android:textSize="18sp">
                     </TextView>
+                    <TextView
+                            android:text="distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/cardDistance3"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -134,10 +149,10 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                     <TextView
-                            android:id="@+id/locationName4"
+                            android:id="@+id/cardName4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_location_name_here"
+                            android:text="name"
                             android:textSize="32sp"
                             android:textStyle="bold">
                     </TextView>
@@ -145,9 +160,14 @@
                             android:id="@+id/cardAddress4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_adress"
+                            android:text="adress"
                             android:textSize="18sp">
                     </TextView>
+                    <TextView
+                            android:text="distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/cardDistance4"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -166,10 +186,10 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                     <TextView
-                            android:id="@+id/locationName5"
+                            android:id="@+id/cardName5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_location_name_here"
+                            android:text="name"
                             android:textSize="32sp"
                             android:textStyle="bold">
                     </TextView>
@@ -177,9 +197,14 @@
                             android:id="@+id/cardAddress5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_adress"
+                            android:text="adress"
                             android:textSize="18sp">
                     </TextView>
+                    <TextView
+                            android:text="distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/cardDistance5"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -198,10 +223,10 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                     <TextView
-                            android:id="@+id/locationName6"
+                            android:id="@+id/cardName6"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_location_name_here"
+                            android:text="name"
                             android:textSize="32sp"
                             android:textStyle="bold">
                     </TextView>
@@ -209,9 +234,14 @@
                             android:id="@+id/cardAddress6"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_adress"
+                            android:text="adress"
                             android:textSize="18sp">
                     </TextView>
+                    <TextView
+                            android:text="distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/cardDistance6"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -230,10 +260,10 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                     <TextView
-                            android:id="@+id/locationName7"
+                            android:id="@+id/cardName7"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_location_name_here"
+                            android:text="name"
                             android:textSize="32sp"
                             android:textStyle="bold">
                     </TextView>
@@ -241,9 +271,14 @@
                             android:id="@+id/cardAddress7"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_adress"
+                            android:text="adress"
                             android:textSize="18sp">
                     </TextView>
+                    <TextView
+                            android:text="distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/cardDistance7"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -262,10 +297,10 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                     <TextView
-                            android:id="@+id/locationName8"
+                            android:id="@+id/cardName8"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_location_name_here"
+                            android:text="name"
                             android:textSize="32sp"
                             android:textStyle="bold">
                     </TextView>
@@ -273,9 +308,14 @@
                             android:id="@+id/cardAddress8"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_adress"
+                            android:text="adress"
                             android:textSize="18sp">
                     </TextView>
+                    <TextView
+                            android:text="distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/cardDistance8"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -294,10 +334,10 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                     <TextView
-                            android:id="@+id/locationName9"
+                            android:id="@+id/cardName9"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_location_name_here"
+                            android:text="name"
                             android:textSize="32sp"
                             android:textStyle="bold">
                     </TextView>
@@ -308,6 +348,11 @@
                             android:text="insert_adress"
                             android:textSize="18sp">
                     </TextView>
+                    <TextView
+                            android:text="distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/cardDistance9"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -326,10 +371,10 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                     <TextView
-                            android:id="@+id/locationName10"
+                            android:id="@+id/cardName10"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="insert_location_name_here"
+                            android:text="name"
                             android:textSize="32sp"
                             android:textStyle="bold">
                     </TextView>
@@ -340,6 +385,11 @@
                             android:text="insert_adress"
                             android:textSize="18sp">
                     </TextView>
+                    <TextView
+                            android:text="distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/cardDistance10"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -365,24 +415,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
-    <androidx.appcompat.widget.AppCompatButton
-            android:text=""
-            android:layout_width="48dp"
-            android:layout_height="48dp" android:id="@+id/searchButton"
-            app:icon="@android:drawable/ic_menu_search"
-            android:contentDescription="Submit search" app:iconGravity="textStart" app:iconPadding="0dp"
-            android:background="@drawable/search_background"
-            android:foreground="@android:drawable/ic_menu_search"
-            android:layout_marginEnd="28dp"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="80dp"
-    />
     <LinearLayout
-            android:layout_width="308dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="80dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="27dp"
-            app:layout_constraintEnd_toStartOf="@+id/searchButton">
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp" app:layout_constraintEnd_toEndOf="parent">
 
         <EditText
                 android:layout_width="match_parent"

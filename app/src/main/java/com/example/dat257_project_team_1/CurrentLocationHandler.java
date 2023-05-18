@@ -38,18 +38,6 @@ class CurrentLocationHandler {
                 Looper.getMainLooper());
     }
 
-    static double calculateDistance(Location location1, Location location2) {
-        double endLat = location1.getLatitude();
-        double endLng = location1.getLongitude();
-        double startLat = location2.getLatitude();
-        double startLng = location2.getLongitude();
-
-        double dLat = Math.toRadians(endLat - startLat);
-        double dLng = Math.toRadians(endLng - startLng);
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(Math.toRadians(startLat)) * Math.cos(Math.toRadians(endLat)) * Math.sin(dLng/2) * Math.sin(dLng/2);
-        return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    }
-
     static boolean isLocationPermissionGranted(Activity activity) {
         return ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;

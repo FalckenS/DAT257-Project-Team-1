@@ -1,5 +1,6 @@
 package com.example.dat257_project_team_1;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import android.view.View;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.cardview.widget.CardView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
     private ArrayList<CardView> cardList;
     private ArrayList<TextView> cardNameList;
     private ArrayList<TextView> cardAddressList;
+    private ArrayList<TextView> cardDistanceList;
     private ArrayList<Location> cardLocationList;
     private Location locationSearchPoint;
 
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         cardList = new ArrayList<>();
         cardNameList = new ArrayList<>();
         cardAddressList = new ArrayList<>();
+        cardDistanceList = new ArrayList<>();
         cardLocationList = new ArrayList<>();
 
         if (!Places.isInitialized()) {
@@ -83,9 +85,9 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         // Placeholder search bar text field event listener
         searchBar.setOnClickListener(view -> activityResultLauncher.launch(autoCompleteIntent));
 
-        AppCompatButton searchButton = findViewById(R.id.searchButton);
+        //AppCompatButton searchButton = findViewById(R.id.searchButton);
         // Placeholder search button event listener
-        searchButton.setOnClickListener(view -> activityResultLauncher.launch(autoCompleteIntent));
+        //searchButton.setOnClickListener(view -> activityResultLauncher.launch(autoCompleteIntent));
 
         findViewById(R.id.setCurrentLocationMarker).setOnClickListener(view -> {
             if (CurrentLocationHandler.isLocationPermissionGranted(this)) {
@@ -135,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         cardList.add(card9);
         cardList.add(card10);
 
-        TextView locationName1 = findViewById(R.id.locationName1);
+        /*TextView locationName1 = findViewById(R.id.locationName1);
         TextView locationName2 = findViewById(R.id.locationName2);
         TextView locationName3 = findViewById(R.id.locationName3);
         TextView locationName4 = findViewById(R.id.locationName4);
@@ -144,20 +146,20 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         TextView locationName7 = findViewById(R.id.locationName7);
         TextView locationName8 = findViewById(R.id.locationName8);
         TextView locationName9 = findViewById(R.id.locationName9);
-        TextView locationName10 = findViewById(R.id.locationName10);
+        TextView locationName10 = findViewById(R.id.locationName10);*/
 
-        cardNameList.add(locationName1);
-        cardNameList.add(locationName2);
-        cardNameList.add(locationName3);
-        cardNameList.add(locationName4);
-        cardNameList.add(locationName5);
-        cardNameList.add(locationName6);
-        cardNameList.add(locationName7);
-        cardNameList.add(locationName8);
-        cardNameList.add(locationName9);
-        cardNameList.add(locationName10);
+        cardNameList.add(findViewById(R.id.cardName1));
+        cardNameList.add(findViewById(R.id.cardName2));
+        cardNameList.add(findViewById(R.id.cardName3));
+        cardNameList.add(findViewById(R.id.cardName4));
+        cardNameList.add(findViewById(R.id.cardName5));
+        cardNameList.add(findViewById(R.id.cardName6));
+        cardNameList.add(findViewById(R.id.cardName7));
+        cardNameList.add(findViewById(R.id.cardName8));
+        cardNameList.add(findViewById(R.id.cardName9));
+        cardNameList.add(findViewById(R.id.cardName10));
 
-        TextView cardAddress1 = findViewById(R.id.cardAddress1);
+        /*TextView cardAddress1 = findViewById(R.id.cardAddress1);
         TextView cardAddress2 = findViewById(R.id.cardAddress2);
         TextView cardAddress3 = findViewById(R.id.cardAddress3);
         TextView cardAddress4 = findViewById(R.id.cardAddress4);
@@ -166,18 +168,29 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         TextView cardAddress7 = findViewById(R.id.cardAddress7);
         TextView cardAddress8 = findViewById(R.id.cardAddress8);
         TextView cardAddress9 = findViewById(R.id.cardAddress9);
-        TextView cardAddress10 = findViewById(R.id.cardAddress10);
+        TextView cardAddress10 = findViewById(R.id.cardAddress10);*/
 
-        cardAddressList.add(cardAddress1);
-        cardAddressList.add(cardAddress2);
-        cardAddressList.add(cardAddress3);
-        cardAddressList.add(cardAddress4);
-        cardAddressList.add(cardAddress5);
-        cardAddressList.add(cardAddress6);
-        cardAddressList.add(cardAddress7);
-        cardAddressList.add(cardAddress8);
-        cardAddressList.add(cardAddress9);
-        cardAddressList.add(cardAddress10);
+        cardAddressList.add(findViewById(R.id.cardAddress1));
+        cardAddressList.add(findViewById(R.id.cardAddress2));
+        cardAddressList.add(findViewById(R.id.cardAddress3));
+        cardAddressList.add(findViewById(R.id.cardAddress4));
+        cardAddressList.add(findViewById(R.id.cardAddress5));
+        cardAddressList.add(findViewById(R.id.cardAddress6));
+        cardAddressList.add(findViewById(R.id.cardAddress7));
+        cardAddressList.add(findViewById(R.id.cardAddress8));
+        cardAddressList.add(findViewById(R.id.cardAddress9));
+        cardAddressList.add(findViewById(R.id.cardAddress10));
+
+        cardDistanceList.add(findViewById(R.id.cardDistance1));
+        cardDistanceList.add(findViewById(R.id.cardDistance2));
+        cardDistanceList.add(findViewById(R.id.cardDistance3));
+        cardDistanceList.add(findViewById(R.id.cardDistance4));
+        cardDistanceList.add(findViewById(R.id.cardDistance5));
+        cardDistanceList.add(findViewById(R.id.cardDistance6));
+        cardDistanceList.add(findViewById(R.id.cardDistance7));
+        cardDistanceList.add(findViewById(R.id.cardDistance8));
+        cardDistanceList.add(findViewById(R.id.cardDistance9));
+        cardDistanceList.add(findViewById(R.id.cardDistance10));
     }
 
     private void openMap(Location locationToSearchFrom){
@@ -241,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         this.recyclingCenters = recyclingCenters;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void updateRecyclingCenters() {
         cardLocationList.clear();
@@ -249,13 +263,15 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
             cardsExist = true;
         }
         showCards(recyclingCenters.size());
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
         for (int i = 0; i < recyclingCenters.size(); i++) {
-            if (!(i < cardNameList.size() && i < cardAddressList.size())) {
+            if (!(i < cardList.size())) {
                 break;
             }
             RecyclingCenter recyclingCenter = recyclingCenters.get(i);
             cardNameList.get(i).setText(recyclingCenter.getName());
             cardAddressList.get(i).setText(recyclingCenter.getAddress());
+            cardDistanceList.get(i).setText("Distance: " + decimalFormat.format(recyclingCenter.getDistance()/1000) + " km");
             cardLocationList.add(recyclingCenter.getLocation());
         }
     }
