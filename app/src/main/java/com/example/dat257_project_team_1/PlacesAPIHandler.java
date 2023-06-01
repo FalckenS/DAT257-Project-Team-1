@@ -1,6 +1,5 @@
 package com.example.dat257_project_team_1;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

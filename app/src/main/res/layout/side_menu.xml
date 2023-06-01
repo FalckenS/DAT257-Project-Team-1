@@ -33,15 +33,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/editTextTextPersonName"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:ems="10"
-                android:inputType="textMultiLine|textPersonName"
-                android:singleLine="false"
-                android:text="App Name" />
-
+            <TextView
+                    android:text="DAT257-Project-Team-1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/appName" android:textSize="24sp"
+                    android:textAlignment="center" android:textColor="#000000"/>
             <Button
                 android:id="@+id/Settings_button"
                 android:layout_width="match_parent"
@@ -52,13 +48,13 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/logIn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:text="Logga In"
-        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
-        app:layout_constraintEnd_toEndOf="@+id/scrollView2"
-        app:layout_constraintStart_toStartOf="parent" />
+            android:id="@+id/logIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Sign in"
+            app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
+            app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+            app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

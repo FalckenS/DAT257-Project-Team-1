@@ -72,7 +72,7 @@ public class MapViewActivity extends AppCompatActivity implements IRecyclingCent
 
         mapSearch = findViewById(R.id.mapSearch);
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == RESULT_OK){
+            if (result.getResultCode() == RESULT_OK) {
                 assert result.getData() != null;
                 Place place = Autocomplete.getPlaceFromIntent(result.getData());
                 mapSearch.setText(place.getAddress());

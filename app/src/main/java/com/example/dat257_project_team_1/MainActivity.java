@@ -137,17 +137,6 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         cardList.add(card9);
         cardList.add(card10);
 
-        /*TextView locationName1 = findViewById(R.id.locationName1);
-        TextView locationName2 = findViewById(R.id.locationName2);
-        TextView locationName3 = findViewById(R.id.locationName3);
-        TextView locationName4 = findViewById(R.id.locationName4);
-        TextView locationName5 = findViewById(R.id.locationName5);
-        TextView locationName6 = findViewById(R.id.locationName6);
-        TextView locationName7 = findViewById(R.id.locationName7);
-        TextView locationName8 = findViewById(R.id.locationName8);
-        TextView locationName9 = findViewById(R.id.locationName9);
-        TextView locationName10 = findViewById(R.id.locationName10);*/
-
         cardNameList.add(findViewById(R.id.cardName1));
         cardNameList.add(findViewById(R.id.cardName2));
         cardNameList.add(findViewById(R.id.cardName3));
@@ -158,17 +147,6 @@ public class MainActivity extends AppCompatActivity implements IRecyclingCenters
         cardNameList.add(findViewById(R.id.cardName8));
         cardNameList.add(findViewById(R.id.cardName9));
         cardNameList.add(findViewById(R.id.cardName10));
-
-        /*TextView cardAddress1 = findViewById(R.id.cardAddress1);
-        TextView cardAddress2 = findViewById(R.id.cardAddress2);
-        TextView cardAddress3 = findViewById(R.id.cardAddress3);
-        TextView cardAddress4 = findViewById(R.id.cardAddress4);
-        TextView cardAddress5 = findViewById(R.id.cardAddress5);
-        TextView cardAddress6 = findViewById(R.id.cardAddress6);
-        TextView cardAddress7 = findViewById(R.id.cardAddress7);
-        TextView cardAddress8 = findViewById(R.id.cardAddress8);
-        TextView cardAddress9 = findViewById(R.id.cardAddress9);
-        TextView cardAddress10 = findViewById(R.id.cardAddress10);*/
 
         cardAddressList.add(findViewById(R.id.cardAddress1));
         cardAddressList.add(findViewById(R.id.cardAddress2));
